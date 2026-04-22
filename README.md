@@ -5,8 +5,6 @@
 <p align="center">
   <img src="https://img.shields.io/badge/PHP-Backend-blue?style=for-the-badge&logo=php">
   <img src="https://img.shields.io/badge/MySQL-Database-orange?style=for-the-badge&logo=mysql">
-  <img src="https://img.shields.io/badge/Status-Development-green?style=for-the-badge">
-  <img src="https://img.shields.io/badge/License-Educational-lightgrey?style=for-the-badge">
 </p>
 
 ---
