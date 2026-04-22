@@ -1,4 +1,4 @@
-# 🌱 DLHK Bank Sampah
+# DLHK Bank Sampah
 
 ### Sistem Informasi Pengelolaan Bank Sampah Berbasis Web
 
