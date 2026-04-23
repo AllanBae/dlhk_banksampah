@@ -11,7 +11,7 @@ $total_nasabah = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as tota
 $total_saldo = mysqli_fetch_assoc(mysqli_query($conn, "SELECT SUM(saldo) as total FROM data_nasabah WHERE role = 'nasabah'"))['total'];
 ?>
 
-<!DOCTYPE html>dadwad
+<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
