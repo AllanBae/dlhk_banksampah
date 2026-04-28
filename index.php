@@ -96,8 +96,8 @@ include 'config/db.php';
     <nav class="navbar navbar-expand-lg fixed-top navbar-custom shadow-sm">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="index.php">
-                <i class="bi bi-recycle me-2"></i>
-                <span>Bank Sampah</span>
+                <img src="assets/img/LOGO BANK SAMPAH EL HA KA.png" alt="Logo" height="80" class="me-2">
+                <!-- <span>Bank Sampah</span> -->
             </a>
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <i class="bi bi-list fs-2 text-info"></i>
@@ -136,9 +136,9 @@ include 'config/db.php';
     <section class="py-5">
         <div class="container">
             <div class="text-center mb-5">
-                <h4 class="fw-bold d-flex align-items-center justify-content-center">
+                <h2 class="fw-bold d-flex align-items-center justify-content-center">
                     <i class="bi bi-wallet2 text-info me-2"></i> <span>Daftar Harga Sampah</span>
-                </h4>
+                </h2    >
                 <p class="text-muted">Harga tukar sampah terkini per kilogram</p>
             </div>
             
@@ -164,7 +164,7 @@ include 'config/db.php';
     <section class="py-5 bg-white shadow-sm">
         <div class="container"> 
             <div class="text-center mb-5">
-                <h4 class="fw-bold m-0"><i class="bi bi-newspaper me-2 text-info"></i>Berita Terkini</h4>
+                <h2 class="fw-bold m-0"><i class="bi bi-newspaper me-2 text-info"></i>Berita Terkini</h2>
                 <p class="text-muted">Update informasi seputar lingkungan</p>
             </div>
 
@@ -222,6 +222,15 @@ include 'config/db.php';
             </div>
         </div>
     </section>
+
+    <div class="container my-5">
+        <h3 class="text-center fw-bold">LOKASI KAMI</h3>
+        <div class="ratio ratio-16x9 mt-3">
+            <iframe src="//www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d10927.167341275293!2d106.16210011195379!3d-2.1552564362071336!3m2!1i1024!2i768
+            !4f13.1!3m3!1m2!1s0x2e22b89f3cf48499%3A0x84872973b1f8bdb2!2sDinas%20Lingkungan%20Hidup%20dan%20Kehutanan%20Provinsi%20Kep.Bangka%20Belitun
+            g!5e0!3m2!1sen!2sid!4v1776054888055!5m2!1sen!2sid"></iframe>></iframe>
+        </div>
+    </div>
 
     <footer class="py-5 text-center">
         <div class="container">

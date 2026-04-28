@@ -10,7 +10,9 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] != 'admin') {
 if (isset($_POST['simpan_sampah'])) {
     $id = $_POST['id_sampah'];
     $jenis = mysqli_real_escape_string($conn, $_POST['jenis_sampah']);
+    $keterangan = mysqli_real_escape_string($conn, $_POST['keterangan']);
     $harga = $_POST['harga_sampah'];
+    $harga_pengepul = $_POST['harga_pengepul'];
     $gambar_lama = $_POST['gambar_lama'];
 
     $target_dir = "../assets/sampah_img/";
@@ -31,9 +33,18 @@ if (isset($_POST['simpan_sampah'])) {
     }
 
     if ($id == "") {
-        $query = "INSERT INTO harga_sampah (jenis_sampah, harga, gambar) VALUES ('$jenis', '$harga', '$gambar_final')";
+        $query = "INSERT INTO harga_sampah 
+        (jenis_sampah, keterangan, harga, harga_pengepul, gambar) 
+        VALUES 
+        ('$jenis', '$keterangan', '$harga', '$harga_pengepul', '$gambar_final')";
     } else {
-        $query = "UPDATE harga_sampah SET jenis_sampah = '$jenis', harga = '$harga', gambar = '$gambar_final' WHERE id = '$id'";
+        $query = "UPDATE harga_sampah SET 
+        jenis_sampah = '$jenis',
+        keterangan = '$keterangan',
+        harga = '$harga',
+        harga_pengepul = '$harga_pengepul',
+        gambar = '$gambar_final'
+        WHERE id = '$id'";
     }
 
     if (mysqli_query($conn, $query)) {
@@ -103,18 +114,32 @@ if (isset($_GET['hapus'])) {
                     <form action="" method="POST" enctype="multipart/form-data">
                         <input type="hidden" name="id_sampah" id="id_sampah">
                         <input type="hidden" name="gambar_lama" id="gambar_lama">
+
                         <div class="mb-3">
                             <label class="form-label small fw-bold">Jenis Sampah</label>
                             <input type="text" name="jenis_sampah" id="jenis_sampah" class="form-control" required>
                         </div>
+
                         <div class="mb-3">
-                            <label class="form-label small fw-bold">Harga per Kg</label>
+                            <label class="form-label small fw-bold">Keterangan</label>
+                            <textarea name="keterangan" id="keterangan" class="form-control"></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Harga per Kg (Nasabah)</label>
                             <input type="number" name="harga_sampah" id="harga_sampah" class="form-control" required>
                         </div>
+
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Harga Pengepul (Admin)</label>
+                            <input type="number" name="harga_pengepul" id="harga_pengepul" class="form-control">
+                        </div>
+
                         <div class="mb-3">
                             <label class="form-label small fw-bold">Foto</label>
                             <input type="file" name="gambar" class="form-control">
                         </div>
+
                         <button type="submit" name="simpan_sampah" class="btn btn-primary w-100 rounded-pill">Simpan Harga</button>
                         <button type="button" onclick="window.location.reload()" class="btn btn-light w-100 rounded-pill mt-2">Batal</button>
                     </form>
@@ -128,7 +153,9 @@ if (isset($_GET['hapus'])) {
                             <tr>
                                 <th>Foto</th>
                                 <th>Jenis</th>
+                                <th>Keterangan</th>
                                 <th>Harga</th>
+                                <th>Harga Pengepul</th>
                                 <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
@@ -140,9 +167,14 @@ if (isset($_GET['hapus'])) {
                             <tr>
                                 <td><img src="../assets/sampah_img/<?= $row['gambar'] ?: 'default.jpg'; ?>" class="img-preview"></td>
                                 <td class="fw-bold"><?= $row['jenis_sampah']; ?></td>
+                                <td><?= $row['keterangan']; ?></td>
                                 <td>Rp <?= number_format($row['harga'], 0, ',', '.'); ?></td>
+                                <td class="text-danger">
+                                    Rp <?= number_format($row['harga_pengepul'] ?? 0, 0, ',', '.'); ?>
+                                </td>
                                 <td class="text-center">
-                                    <button class="btn btn-warning btn-sm text-white" onclick="editData('<?= $row['id']; ?>', '<?= $row['jenis_sampah']; ?>', '<?= $row['harga']; ?>', '<?= $row['gambar']; ?>')">Edit</button>
+                                    <button class="btn btn-warning btn-sm text-white"
+                                    onclick="editData('<?= $row['id']; ?>','<?= $row['jenis_sampah']; ?>','<?= $row['harga']; ?>','<?= $row['gambar']; ?>',`<?= $row['keterangan']; ?>`,'<?= $row['harga_pengepul']; ?>')">Edit</button>
                                     <a href="?hapus=<?= $row['id']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Hapus?')">Hapus</a>
                                 </td>
                             </tr>
@@ -156,13 +188,16 @@ if (isset($_GET['hapus'])) {
 </div>
 
 <script>
-    function editData(id, jenis, harga, gambar) {
-        document.getElementById('formTitle').innerText = "Edit Data";
-        document.getElementById('id_sampah').value = id;
-        document.getElementById('jenis_sampah').value = jenis;
-        document.getElementById('harga_sampah').value = harga;
-        document.getElementById('gambar_lama').value = gambar;
-    }
+function editData(id, jenis, harga, gambar, keterangan, harga_pengepul) {
+    document.getElementById('formTitle').innerText = "Edit Data";
+    document.getElementById('id_sampah').value = id;
+    document.getElementById('jenis_sampah').value = jenis;
+    document.getElementById('harga_sampah').value = harga;
+    document.getElementById('keterangan').value = keterangan;
+    document.getElementById('harga_pengepul').value = harga_pengepul;
+    document.getElementById('gambar_lama').value = gambar;
+}
 </script>
+
 </body>
 </html>

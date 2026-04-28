@@ -76,7 +76,10 @@ $data_setoran = [10, 15, 8, 20, 25, 18];
 
 <nav class="navbar navbar-expand-lg sticky-top">
     <div class="container">
-        <a class="navbar-brand" href="#">♻️ Bank Sampah</a>
+        <a class="navbar-brand d-flex align-items-center" href="#">
+            <img src="../assets/img/LOGO BANK SAMPAH EL HA KA.png" alt="Logo" height="80" class="me-2">
+            <span>BANK SAMPAH EL HA KA</span>
+        </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
