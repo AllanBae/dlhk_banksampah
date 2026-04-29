@@ -75,7 +75,7 @@ $q_top_nasabah = mysqli_query($conn, "SELECT dn.nama_lengkap, dn.username, COUNT
 <div class="d-flex"> 
     <nav id="sidebar">
         <div class="sidebar-header d-flex align-items-center justify-content-center">
-            <i class="fas fa-leaf fs-3 me-2"></i>
+            <i class="fas fa-recycle fs-3 me-2" style="color: #9ACD32;"></i>
             <h4 class="fw-bold m-0">EL HA KA</h4>
         </div>
         <ul class="list-unstyled components">
