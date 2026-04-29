@@ -7,7 +7,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $fullname = isset($_POST['nama_user']) ? trim($_POST['nama_user']) : '';
     $username = isset($_POST['username']) ? trim($_POST['username']) : '';
-    // Variabel instansi tetap menangkap data, jika kosong maka isinya hanya teks kosong ""
     $instansi = isset($_POST['instansi']) ? trim($_POST['instansi']) : ''; 
     $no_hp    = isset($_POST['no_hp']) ? trim($_POST['no_hp']) : '';
     $alamat   = isset($_POST['alamat']) ? trim($_POST['alamat']) : '';
@@ -44,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
     } else {
-        $error = "Semua kolom wajib diisi!"; // Peringatan ini sekarang hanya berlaku untuk yang ada atribut 'required'
+        $error = "Semua kolom wajib diisi!";
     }
 }
 ?>
@@ -76,6 +75,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .btn-custom { border-radius: 12px; background: var(--hijau-tua); color: #fff; border: none; padding: 14px; font-weight: 600; width: 100%; transition: 0.3s; }
         .btn-custom:hover { background: var(--hijau-muda); transform: translateY(-2px); }
         .text-hijau { color: var(--hijau-tua); }
+        .form-control-custom::placeholder {
+        color: #a0a0a0; 
+        opacity: 1;}
+        .form-control-custom {
+        color: #6c757d; }
     </style>
 </head>
 <body>
@@ -117,12 +121,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                             <div class="col-md-6">
                                 <div><label class="form-label fw-bold small text-muted mb-1">USERNAME</label><input type="text" name="username" class="form-control form-control-custom" placeholder="Buat username" required></div>
-                                
                                 <div class="mt-3">
                                     <label class="form-label fw-bold small text-muted mb-1">DINAS/INSTANSI (Opsional)</label>
-                                    <input type="text" name="instansi" class="form-control form-control-custom" placeholder="Kosongkan jika bukan dari instansi">
-                                </div>
-                                
+                                    <input type="text" name="instansi" class="form-control form-control-custom text-secondary" placeholder="Kosongkan jika tidak ada">
+                                </div>                               
                                 <div class="mt-3">
                                     <label class="form-label fw-bold small text-muted mb-1">PASSWORD</label>
                                     <div class="input-group">
