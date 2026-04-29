@@ -125,6 +125,9 @@ $query_setoran = mysqli_query($conn, "
             <li class="<?= basename($_SERVER['PHP_SELF']) == 'data_setoran.php' ? 'active' : ''; ?>">
                 <a href="data_setoran.php"><i class="fas fa-balance-scale me-3"></i> Data Setoran</a>
             </li>
+            <li class="<?= basename($_SERVER['PHP_SELF']) == 'data_penarikan.php' ? 'active' : ''; ?>">
+                <a href="data_penarikan.php"><i class="fas fa-coins me-3"></i> Data Penarikan</a>
+            </li>
             <li class="<?= basename($_SERVER['PHP_SELF']) == 'admin_kelolasampah.php' ? 'active' : ''; ?>">
                 <a href="admin_kelolasampah.php"><i class="fas fa-recycle me-3"></i> Kelola Sampah</a>
             </li>
