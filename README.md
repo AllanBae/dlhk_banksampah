@@ -22,6 +22,5 @@ Aplikasi ini mempermudah pencatatan transaksi, pengelolaan nasabah, serta monito
 * ♻️ **Setoran Sampah** (otomatis hitung nilai)
 * 💰 **Penarikan Saldo**
 * 📊 **Laporan & Rekap Data**
-* 🔎 **Pencarian & Filter Data**
-* 🧾 **Riwayat Transaksi**
+
 
