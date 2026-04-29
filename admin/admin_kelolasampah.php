@@ -75,173 +75,64 @@ if (isset($_GET['hapus'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Kelola Harga Sampah | Admin</title>
+    <title>Kelola Sampah | Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
-        :root { 
-            --hijau-tua: #1A8F3A;     
-            --hijau-muda: #9ACD32;    
-            --hijau-bg: #f4f9f5; 
-        }
-
-        body {
-            background-color: var(--hijau-bg);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow-x: hidden;
-        }
-
-        /* --- Sidebar Styling --- */
-        #sidebar {
-            min-width: 260px;
-            max-width: 260px;
-            min-height: 100vh;
-            background: var(--hijau-tua);
-            color: #fff;
-            transition: all 0.3s;
-            z-index: 1040;
-        }
-
-        #sidebar .sidebar-header {
-            padding: 25px 20px;
-            background: rgba(0,0,0,0.1);
-            text-align: center;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-
-        #sidebar ul.components {
-            padding: 20px 0;
-        }
-
-        #sidebar ul li a {
-            padding: 15px 25px;
-            display: block;
-            color: rgba(255,255,255,0.8);
-            text-decoration: none;
-            transition: 0.3s;
-            font-weight: 500;
-        }
-
-        #sidebar ul li a:hover {
-            color: #fff;
-            background: rgba(255,255,255,0.1);
-            padding-left: 30px;
-        }
-
-        #sidebar ul li.active > a {
-            background: var(--hijau-muda);
-            color: #fff;
-            border-radius: 0 30px 30px 0;
-            margin-right: 20px;
-            box-shadow: 0 4px 15px rgba(154, 205, 50, 0.4);
-        }
-
-        /* --- Main Content & Top Navbar --- */
-        #content {
-            width: 100%;
-            transition: all 0.3s;
-        }
-
-        .top-navbar {
-            background: rgba(255, 255, 255, 0.9) !important;
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid #e9ecef;
-            padding: 15px 25px;
-        }
-
-        .main-inner {
-            padding: 30px;
-        }
-
-        /* --- Card & Table --- */
-        .glass-card { 
-            background: #fff; 
-            border: none; 
-            border-radius: 15px; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
-        }
-        
-        .table-hover tbody tr:hover {
-            background-color: rgba(154, 205, 50, 0.05);
-        }
-
-        .img-preview { width: 60px; height: 60px; object-fit: cover; border-radius: 8px; border: 2px solid var(--hijau-muda); }
-
-        .form-control:focus {
-            border-color: var(--hijau-muda);
-            box-shadow: 0 0 0 0.25rem rgba(154, 205, 50, 0.25);
-        }
-
-        /* --- Mobile Responsiveness --- */
-        @media (max-width: 768px) {
-            #sidebar {
-                margin-left: -260px;
-                position: fixed;
-                height: 100vh;
-            }
-            #sidebar.active {
-                margin-left: 0;
-                box-shadow: 5px 0 15px rgba(0,0,0,0.1);
-            }
-            .main-inner { padding: 15px; }
-            
-            .sidebar-overlay {
-                display: none;
-                position: fixed;
-                width: 100vw;
-                height: 100vh;
-                background: rgba(0,0,0,0.5);
-                z-index: 1030;
-                top: 0;
-                left: 0;
-            }
-            .sidebar-overlay.active { display: block; }
-        }
+         :root { --hijau-tua: #1A8F3A; --hijau-muda: #9ACD32; --hijau-bg: #f4f9f5; }
+        body { background-color: var(--hijau-bg); font-family: 'Segoe UI', sans-serif; }
+        #sidebar { min-width: 260px; max-width: 260px; min-height: 100vh; background: var(--hijau-tua); color: #fff; transition: all 0.3s; z-index: 1040; }
+        #sidebar .sidebar-header { padding: 25px 20px; background: rgba(0,0,0,0.1); text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        #sidebar ul li a { padding: 15px 25px; display: block; color: rgba(255,255,255,0.8); text-decoration: none; transition: 0.3s; font-weight: 500; }
+        #sidebar ul li a:hover { color: #fff; background: rgba(255,255,255,0.1); padding-left: 30px; }
+        #sidebar ul li.active > a { background: var(--hijau-muda); color: #fff; border-radius: 0 30px 30px 0; margin-right: 20px; box-shadow: 0 4px 15px rgba(154, 205, 50, 0.4); }
+        #content { width: 100%; transition: all 0.3s; }
+        .top-navbar { background: rgba(255, 255, 255, 0.9) !important; backdrop-filter: blur(10px); border-bottom: 1px solid #e9ecef; padding: 15px 25px; }
+        .main-inner { padding: 30px; }
+        .glass-card { background: #fff; border: none; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .modal-profile-img { width: 100px; height: 100px; object-fit: cover; border-radius: 50%; border: 3px solid var(--hijau-muda); }
+        @media (max-width: 768px) { #sidebar { margin-left: -260px; position: fixed; } #sidebar.active { margin-left: 0; } .sidebar-overlay.active { display: block; position: fixed; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1030; } }
     </style>
 </head>
 <body>
 
-<div class="d-flex">
-    
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
+<div class="d-flex"> 
     <nav id="sidebar">
         <div class="sidebar-header d-flex align-items-center justify-content-center">
             <i class="fas fa-leaf fs-3 me-2"></i>
             <h4 class="fw-bold m-0">EL HA KA</h4>
         </div>
-            <ul class="list-unstyled components">
-                <li class="<?= basename($_SERVER['PHP_SELF']) == 'admin_dashboard.php' ? 'active' : ''; ?>">
-                    <a href="admin_dashboard.php"><i class="fas fa-chart-line me-3"></i> Dashboard</a>
-                </li>
-                <li class="<?= basename($_SERVER['PHP_SELF']) == 'data_nasabah.php' ? 'active' : ''; ?>">
-                    <a href="data_nasabah.php"><i class="fas fa-users me-3"></i> Data Nasabah</a>
-                </li>
-                <li class="<?= basename($_SERVER['PHP_SELF']) == 'data_setoran.php' ? 'active' : ''; ?>">
-                    <a href="data_setoran.php"><i class="fas fa-balance-scale me-3"></i> Data Setoran</a>
-                </li>
-                <li class="<?= basename($_SERVER['PHP_SELF']) == 'admin_kelolasampah.php' ? 'active' : ''; ?>">
-                    <a href="admin_kelolasampah.php"><i class="fas fa-recycle me-3"></i> Kelola Sampah</a>
-                </li>
-                <li class="<?= basename($_SERVER['PHP_SELF']) == 'admin_kelolaberita.php' ? 'active' : ''; ?>">
-                    <a href="admin_kelolaberita.php"><i class="fas fa-newspaper me-3"></i> Kelola Berita</a>
-                </li>
-                <li class="<?= basename($_SERVER['PHP_SELF']) == 'laporan.php' ? 'active' : ''; ?>">
-                    <a href="laporan.php"><i class="fas fa-file-invoice me-3"></i> Laporan</a>
-                </li>
-                <li class="mt-4">
-                    <a href="../auth/logout.php" class="text-warning"><i class="fas fa-sign-out-alt me-3"></i> Keluar</a>
-                </li>
-            </ul>
+        <ul class="list-unstyled components">
+            <li class="<?= basename($_SERVER['PHP_SELF']) == 'admin_dashboard.php' ? 'active' : ''; ?>">
+                <a href="admin_dashboard.php"><i class="fas fa-chart-line me-3"></i> Dashboard</a>
+            </li>
+            <li class="<?= basename($_SERVER['PHP_SELF']) == 'data_nasabah.php' ? 'active' : ''; ?>">
+                <a href="data_nasabah.php"><i class="fas fa-users me-3"></i> Data Nasabah</a>
+            </li>
+            <li class="<?= basename($_SERVER['PHP_SELF']) == 'data_setoran.php' ? 'active' : ''; ?>">
+                <a href="data_setoran.php"><i class="fas fa-balance-scale me-3"></i> Data Setoran</a>
+            </li>
+            <li class="<?= basename($_SERVER['PHP_SELF']) == 'admin_kelolasampah.php' ? 'active' : ''; ?>">
+                <a href="admin_kelolasampah.php"><i class="fas fa-recycle me-3"></i> Kelola Sampah</a>
+            </li>
+            <li class="<?= basename($_SERVER['PHP_SELF']) == 'admin_kelolaberita.php' ? 'active' : ''; ?>">
+                <a href="admin_kelolaberita.php"><i class="fas fa-newspaper me-3"></i> Kelola Berita</a>
+            </li>
+            <li class="<?= basename($_SERVER['PHP_SELF']) == 'laporan.php' ? 'active' : ''; ?>">
+                <a href="laporan.php"><i class="fas fa-file-invoice me-3"></i> Laporan</a>
+            </li>
+            <li>
+                <a href="../auth/logout.php" class="text-warning"><i class="fas fa-sign-out-alt me-3"></i> Keluar</a>
+            </li>
+        </ul>
     </nav>
 
-    <div id="content">
+
+   <div id="content">
         <nav class="navbar top-navbar sticky-top d-flex justify-content-between align-items-center shadow-sm">
             <div class="d-flex align-items-center">
-                <button type="button" id="sidebarCollapse" class="btn btn-light shadow-sm d-md-none me-3">
-                    <i class="fas fa-bars" style="color: var(--hijau-tua);"></i>
-                </button>
-                <h4 class="fw-bold m-0 d-none d-md-block" style="color: var(--hijau-tua);">Kelola Harga Sampah</h4>
+                <button type="button" id="sidebarCollapse" class="btn btn-light d-md-none me-3"><i class="fas fa-bars"></i></button>
+                <h4 class="fw-bold m-0 text-success">Kelola Harga Sampah</h4>
             </div>
         </nav>
 
