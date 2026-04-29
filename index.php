@@ -13,10 +13,11 @@ include 'config/db.php';
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     
     <style>
+        /* 1. MENGUBAH VARIABEL WARNA SESUAI LOGO */
         :root {
-            --biru-muda-bg: #e3f2fd;
-            --biru-cerah: #0ea5e9;
-            --biru-gelap: #0369a1;
+            --hijau-bg-muda: #f0f8f1; /* Hijau sangat muda untuk latar belakang tipis/border */
+            --hijau-tua: #1A8F3A;     /* Hijau gelap dari teks "Bank Sampah" */
+            --hijau-muda: #9ACD32;    /* Hijau kekuningan dari ikon daun dan rumah */
         }
 
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; overflow-x: hidden; }
@@ -24,11 +25,11 @@ include 'config/db.php';
         .navbar-custom { 
             background-color: rgba(255, 255, 255, 0.95) !important; 
             backdrop-filter: blur(10px);
-            border-bottom: 2px solid var(--biru-muda-bg);
+            border-bottom: 2px solid var(--hijau-bg-muda);
         }
-        .navbar-brand { color: var(--biru-cerah) !important; font-weight: 800; font-size: 22px; }
+        .navbar-brand { color: var(--hijau-tua) !important; font-weight: 800; font-size: 22px; }
         .nav-link.nav-modern { color: #475569; font-weight: 600; padding: 10px 15px; transition: 0.3s; }
-        .nav-link.nav-modern:hover { color: var(--biru-cerah); }
+        .nav-link.nav-modern:hover { color: var(--hijau-tua); }
 
         @media (max-width: 991.98px) {
             .navbar-collapse { 
@@ -38,7 +39,7 @@ include 'config/db.php';
                 border-radius: 12px;
                 padding: 10px;
             }
-            .navbar-nav { align-items: flex-start !important; } /
+            .navbar-nav { align-items: flex-start !important; } 
             .nav-item { width: 100%; border-bottom: 1px solid #f1f5f9; } 
             .nav-item:last-child { border-bottom: none; }
             .btn-daftar { 
@@ -51,7 +52,7 @@ include 'config/db.php';
         }
 
         .btn-daftar { 
-            background-color: var(--biru-cerah); 
+            background-color: var(--hijau-tua); 
             color: white !important; 
             border-radius: 8px; 
             padding: 8px 20px !important;
@@ -79,8 +80,9 @@ include 'config/db.php';
         .scrolling-wrapper::-webkit-scrollbar { display: none; }
         .scrolling-card { flex: 0 0 auto; width: 300px; }
 
-        .btn-biru { background-color: var(--biru-cerah); color: white; border-radius: 10px; font-weight: 600; padding: 12px 30px; border: none; transition: 0.3s; }
-        .btn-biru:hover { background-color: var(--biru-gelap); transform: scale(1.05); color: white; }
+        /* 2. MENGUBAH TOMBOL UTAMA MENJADI HIJAU */
+        .btn-hijau { background-color: var(--hijau-tua); color: white; border-radius: 10px; font-weight: 600; padding: 12px 30px; border: none; transition: 0.3s; }
+        .btn-hijau:hover { background-color: var(--hijau-muda); transform: scale(1.05); color: white; }
         
         .card { border: none; border-radius: 15px; transition: 0.3s; }
         .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
@@ -97,10 +99,9 @@ include 'config/db.php';
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="index.php">
                 <img src="assets/img/LOGO BANK SAMPAH EL HA KA.png" alt="Logo" height="80" class="me-2">
-                <!-- <span>Bank Sampah</span> -->
             </a>
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <i class="bi bi-list fs-2 text-info"></i>
+                <i class="bi bi-list fs-2" style="color: var(--hijau-tua);"></i>
             </button>
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav align-items-center">
@@ -125,10 +126,10 @@ include 'config/db.php';
         </div>
         
         <div class="hero-static-content">
-            <h1 class="fw-bold display-4 mb-3">Bersihkan Lingkungan,<br><span style="color: var(--biru-cerah);">Dapatkan Penghasilan</span></h1>
+            <h1 class="fw-bold display-4 mb-3">Bersihkan Lingkungan,<br><span style="color: var(--hijau-muda);">Dapatkan Penghasilan</span></h1>
             <p class="lead mb-4">Ubah sampah rumah tangga menjadi saldo tabungan yang bermanfaat bagi masa depan.</p>
             <div class="d-flex justify-content-center gap-3">
-                <a href="auth/signup.php" class="btn btn-biru btn-lg shadow">Menabung Sekarang</a>
+                <a href="auth/signup.php" class="btn btn-hijau btn-lg shadow">Menabung Sekarang</a>
             </div>
         </div>
     </section>
@@ -137,8 +138,8 @@ include 'config/db.php';
         <div class="container">
             <div class="text-center mb-5">
                 <h2 class="fw-bold d-flex align-items-center justify-content-center">
-                    <i class="bi bi-wallet2 text-info me-2"></i> <span>Daftar Harga Sampah</span>
-                </h2    >
+                    <i class="bi bi-wallet2 me-2" style="color: var(--hijau-tua);"></i> <span>Daftar Harga Sampah</span>
+                </h2>
                 <p class="text-muted">Harga tukar sampah terkini per kilogram</p>
             </div>
             
@@ -152,7 +153,7 @@ include 'config/db.php';
                         <img src="assets/sampah_img/<?= $row['gambar']; ?>" class="card-img-top" alt="sampah" style="height: 180px; object-fit: cover; border-radius: 15px 15px 0 0;">
                         <div class="card-body text-center">
                             <h5 class="fw-bold"><?= $row['jenis_sampah']; ?></h5>
-                            <p class="text-primary fw-bold fs-5">Rp <?= number_format($row['harga'], 0, ',', '.'); ?> <small class="text-muted">/kg</small></p>
+                            <p class="fw-bold fs-5" style="color: var(--hijau-tua);">Rp <?= number_format($row['harga'], 0, ',', '.'); ?> <small class="text-muted">/kg</small></p>
                         </div>
                     </div>
                 </div>
@@ -164,7 +165,7 @@ include 'config/db.php';
     <section class="py-5 bg-white shadow-sm">
         <div class="container"> 
             <div class="text-center mb-5">
-                <h2 class="fw-bold m-0"><i class="bi bi-newspaper me-2 text-info"></i>Berita Terkini</h2>
+                <h2 class="fw-bold m-0"><i class="bi bi-newspaper me-2" style="color: var(--hijau-tua);"></i>Berita Terkini</h2>
                 <p class="text-muted">Update informasi seputar lingkungan</p>
             </div>
 
@@ -182,7 +183,7 @@ include 'config/db.php';
                             <small class="text-muted d-block mb-2"><i class="bi bi-calendar-event me-1"></i> <?= date('d M Y', strtotime($b['tanggal'])); ?></small>
                             <h6 class="fw-bold judul-potong"><?= $b['judul']; ?></h6>
                             <button class="btn btn-link p-0 text-decoration-none fw-bold mt-2" 
-                                    style="color: var(--biru-cerah);"
+                                    style="color: var(--hijau-tua);"
                                     data-bs-toggle="modal" data-bs-target="#modalDetailBerita"
                                     data-judul="<?= htmlspecialchars($b['judul']); ?>"
                                     data-tanggal="<?= date('d F Y', strtotime($b['tanggal'])); ?>"
@@ -204,14 +205,17 @@ include 'config/db.php';
             <div class="row g-4 text-start">
                 <div class="col-md-6">
                     <div class="p-4 bg-white rounded-4 shadow-sm h-100 text-center border">
-                        <i class="bi bi-eye-fill fs-1 text-info mb-3"></i>
+                        <i class="bi bi-eye-fill fs-1 mb-3" style="color: var(--hijau-tua);"></i>
                         <h4 class="fw-bold">Visi</h4>
                         <p class="text-muted">Menjadi platform digital pengelolaan sampah nomor satu di Indonesia.</p>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="p-4 bg-white rounded-4 shadow-sm h-100 border">
-                        <div class="text-center mb-3"><i class="bi bi-bullseye fs-1 text-info"></i><h4 class="fw-bold">Misi</h4></div>
+                        <div class="text-center mb-3">
+                            <i class="bi bi-bullseye fs-1" style="color: var(--hijau-tua);"></i>
+                            <h4 class="fw-bold mt-2">Misi</h4>
+                        </div>
                         <ul class="text-muted">
                             <li>Edukasi pemilahan sampah dari rumah.</li>
                             <li>Akses digital mudah tukar sampah jadi saldo.</li>
@@ -226,16 +230,14 @@ include 'config/db.php';
     <div class="container my-5">
         <h3 class="text-center fw-bold">LOKASI KAMI</h3>
         <div class="ratio ratio-16x9 mt-3">
-            <iframe src="//www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d10927.167341275293!2d106.16210011195379!3d-2.1552564362071336!3m2!1i1024!2i768
-            !4f13.1!3m3!1m2!1s0x2e22b89f3cf48499%3A0x84872973b1f8bdb2!2sDinas%20Lingkungan%20Hidup%20dan%20Kehutanan%20Provinsi%20Kep.Bangka%20Belitun
-            g!5e0!3m2!1sen!2sid!4v1776054888055!5m2!1sen!2sid"></iframe>></iframe>
+            <iframe src="https://maps.google.com/maps?q=Dinas%20Lingkungan%20Hidup%20dan%20Kehutanan%20Provinsi%20Kep.Bangka%20Belitung&t=&z=13&ie=UTF8&iwloc=&output=embed" allowfullscreen></iframe>
         </div>
     </div>
 
     <footer class="py-5 text-center">
         <div class="container">
-            <h5 class="fw-bold text-info mb-2">Bank Sampah DLH Provinsi BANGKA BELITUNG</h5>
-            <p class="small text-muted mb-0">&copy; 2026 Hak Cipta Terlindungi.</p>
+            <h5 class="fw-bold mb-2" style="color: var(--hijau-tua);">Bank Sampah DLH Provinsi BANGKA BELITUNG</h5>
+            <p class="small text-muted mb-0">© 2026 Hak Cipta Terlindungi.</p>
         </div>
     </footer>
 

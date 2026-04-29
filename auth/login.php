@@ -49,12 +49,18 @@ if (isset($_POST['login'])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <style>
-        :root { --primary: #0ea5e9; --primary-dark: #0284c7; --biru-muda-bg: #e3f2fd; }
+        /* Mengubah tema menjadi hijau sesuai logo */
+        :root { 
+            --hijau-tua: #1A8F3A;     
+            --hijau-muda: #9ACD32;    
+            --hijau-bg-muda: #f0f8f1; 
+        }
         body { background: #f8fafc; font-family: 'Inter', sans-serif; }
 
-        .navbar-custom { background: rgba(255, 255, 255, 0.95) !important; backdrop-filter: blur(10px); border-bottom: 2px solid var(--biru-muda-bg); }
-        .navbar-brand { color: var(--primary) !important; font-weight: 800; font-size: 22px; }
-        .nav-link.nav-modern { color: #475569; font-weight: 600; padding: 10px 15px; }
+        .navbar-custom { background: rgba(255, 255, 255, 0.95) !important; backdrop-filter: blur(10px); border-bottom: 2px solid var(--hijau-bg-muda); }
+        .navbar-brand { color: var(--hijau-tua) !important; font-weight: 800; font-size: 22px; }
+        .nav-link.nav-modern { color: #475569; font-weight: 600; padding: 10px 15px; transition: 0.3s; }
+        .nav-link.nav-modern:hover { color: var(--hijau-tua); }
 
         @media (max-width: 991.98px) {
             .navbar-collapse { 
@@ -70,14 +76,21 @@ if (isset($_POST['login'])) {
             .btn-daftar { margin-left: 0 !important; margin-top: 10px; width: 100%; text-align: left !important; }
         }
 
-        .btn-daftar { background: var(--primary); color: #fff !important; border-radius: 8px; padding: 8px 20px !important; margin-left: 10px; }
+        .btn-daftar { background: var(--hijau-tua); color: #fff !important; border-radius: 8px; padding: 8px 20px !important; margin-left: 10px; transition: 0.3s; }
+        .btn-daftar:hover { background: var(--hijau-muda); }
 
         .main-content { min-height: 100vh; display: flex; align-items: center; padding-top: 80px; }
         .login-container { max-width: 400px; margin: auto; width: 100%; padding: 15px; }
         .login-form { background: #fff; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
-        .form-title { font-weight: 800; color: var(--primary); margin-bottom: 25px; text-align: center; }
+        .form-title { font-weight: 800; color: var(--hijau-tua); margin-bottom: 25px; text-align: center; }
         .form-control-custom { border-radius: 12px; padding: 12px; border: 1px solid #e2e8f0; }
-        .btn-custom { border-radius: 12px; background: var(--primary); color: #fff; border: none; padding: 12px; font-weight: 600; width: 100%; }
+        .form-control-custom:focus { border-color: var(--hijau-muda); box-shadow: 0 0 0 0.25rem rgba(154, 205, 50, 0.25); }
+        
+        .btn-custom { border-radius: 12px; background: var(--hijau-tua); color: #fff; border: none; padding: 12px; font-weight: 600; width: 100%; transition: 0.3s; }
+        .btn-custom:hover { background: var(--hijau-muda); color: white; }
+        
+        .text-hijau { color: var(--hijau-tua); }
+        .text-hijau:hover { color: var(--hijau-muda); }
     </style>
 </head>
 <body>
@@ -85,7 +98,7 @@ if (isset($_POST['login'])) {
 <nav class="navbar navbar-expand-lg fixed-top navbar-custom shadow-sm">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center" href="../index.php">
-            <i class="bi bi-recycle me-2"></i><span>Bank Sampah</span>
+            <img src="../assets/img/LOGO BANK SAMPAH EL HA KA.png" alt="Logo" height="80" class="me-2">
         </a>
         <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
@@ -113,13 +126,15 @@ if (isset($_POST['login'])) {
                     <div class="mb-4">
                         <label class="form-label small fw-bold">PASSWORD</label>
                         <div class="input-group">
-                            <input type="password" name="password" id="password" class="form-control form-control-custom" required>
-                            <span class="input-group-text bg-white" id="togglePassword" style="cursor:pointer; border-radius: 0 12px 12px 0;"><i class="bi bi-eye"></i></span>
+                            <input type="password" name="password" id="password" class="form-control form-control-custom" required style="border-right: none;">
+                            <span class="input-group-text bg-white form-control-custom" id="togglePassword" style="cursor:pointer; border-radius: 0 12px 12px 0; border-left: none;">
+                                <i class="bi bi-eye"></i>
+                            </span>
                         </div>
                     </div>
                     <button type="submit" name="login" class="btn btn-custom shadow">Masuk</button>
                 </form>
-                <p class="text-center mt-4 mb-0 small">Belum punya akun? <a href="signup.php" class="text-primary fw-bold text-decoration-none">Daftar Sekarang</a></p>
+                <p class="text-center mt-4 mb-0 small">Belum punya akun? <a href="signup.php" class="text-hijau fw-bold text-decoration-none">Daftar Sekarang</a></p>
             </div>
         </div>
     </div>

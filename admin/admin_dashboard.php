@@ -1,24 +1,30 @@
 <?php
 session_start();
+include '../config/db.php';
 
-require_once '../config/db.php'; 
+date_default_timezone_set('Asia/Jakarta');
 
 if (!isset($_SESSION['role']) || $_SESSION['role'] != 'admin') {
     header("Location: ../auth/login.php");
     exit;
 }
 
+$nama_admin = isset($_SESSION['nama']) ? $_SESSION['nama'] : "Admin";
 
-$query_nasabah = mysqli_query($conn, "SELECT COUNT(*) as total FROM data_nasabah");
-if ($query_nasabah) {
-    $data_nasabah = mysqli_fetch_assoc($query_nasabah);
-    $total_nasabah = $data_nasabah['total'];
-} else {
-    $total_nasabah = 0;
+$total_nasabah = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM data_nasabah WHERE role = 'nasabah'"))['total'];
+$total_saldo = mysqli_fetch_assoc(mysqli_query($conn, "SELECT SUM(saldo) as total FROM data_nasabah WHERE role = 'nasabah'"))['total'];
+
+$data_berat_bulan = array_fill(0, 12, 0); 
+$tahun_ini = date('Y');
+$q_tren_bulan = mysqli_query($conn, "SELECT MONTH(tanggal) as bulan, SUM(berat) as total_berat FROM transaksi WHERE YEAR(tanggal) = '$tahun_ini' GROUP BY MONTH(tanggal)");
+while($row = mysqli_fetch_assoc($q_tren_bulan)){
+    $data_berat_bulan[$row['bulan'] - 1] = $row['total_berat'];
 }
+$json_data_bulan = json_encode($data_berat_bulan); 
 
-$data_hari = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
-$data_berat = [45, 59, 80, 81, 56, 95, 40]; 
+$q_top_sampah = mysqli_query($conn, "SELECT hs.jenis_sampah, SUM(t.berat) as total_berat FROM transaksi t JOIN harga_sampah hs ON t.id_sampah = hs.id GROUP BY t.id_sampah ORDER BY total_berat DESC LIMIT 5");
+
+$q_top_nasabah = mysqli_query($conn, "SELECT dn.nama_lengkap, dn.username, COUNT(t.id) as frekuensi, SUM(t.berat) as total_berat FROM transaksi t JOIN data_nasabah dn ON t.id_nasabah = dn.id GROUP BY t.id_nasabah ORDER BY frekuensi DESC, total_berat DESC LIMIT 5");
 ?>
 
 
@@ -26,211 +32,266 @@ $data_berat = [45, 59, 80, 81, 56, 95, 40];
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin | Bank Sampah</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin | Bank Sampah EL HA KA</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+        :root { 
+            --hijau-tua: #1A8F3A;     
+            --hijau-muda: #9ACD32;    
+            --hijau-bg: #f4f9f5; 
+        }
+
         body {
-            background-color: #f4f7f6;
+            background-color: var(--hijau-bg);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
         }
 
-        #sidebar {
-            min-width: 250px;
-            max-width: 250px;
-            min-height: 100vh;
-            background: #2c3e50;
-            color: #fff;
-            position: sticky;
-            top: 0;
-        }
+        #sidebar { min-width: 260px; max-width: 260px; min-height: 100vh; background: var(--hijau-tua); color: #fff; transition: all 0.3s; z-index: 1040; }
+        #sidebar .sidebar-header { padding: 25px 20px; background: rgba(0,0,0,0.1); text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        #sidebar ul.components { padding: 20px 0; }
+        #sidebar ul li a { padding: 15px 25px; display: block; color: rgba(255,255,255,0.8); text-decoration: none; transition: 0.3s; font-weight: 500; }
+        #sidebar ul li a:hover { color: #fff; background: rgba(255,255,255,0.1); padding-left: 30px; }
+        #sidebar ul li.active > a { background: var(--hijau-muda); color: #fff; border-radius: 0 30px 30px 0; margin-right: 20px; box-shadow: 0 4px 15px rgba(154, 205, 50, 0.4); }
 
-        #sidebar .sidebar-header {
-            padding: 20px;
-            background: #1a252f;
-            text-align: center;
-        }
+        #content { width: 100%; transition: all 0.3s; }
+        .top-navbar { background: rgba(255, 255, 255, 0.9) !important; backdrop-filter: blur(10px); border-bottom: 1px solid #e9ecef; padding: 15px 25px; }
+        .main-inner { padding: 30px; }
 
-        #sidebar ul li a {
-            padding: 15px 20px;
-            display: block;
-            color: #bdc3c7;
-            text-decoration: none;
-            border-bottom: 1px solid #34495e;
-            transition: 0.3s;
-        }
+        .glass-card { background: #fff; border: none; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .card-stat { border-left: 5px solid var(--hijau-tua); transition: 0.3s; }
+        .card-stat:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
+        .icon-box { width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; border-radius: 12px; font-size: 1.8rem; }
+        
+        .list-group-item { border: none; border-bottom: 1px solid #f0f0f0; padding: 15px 10px; }
+        .list-group-item:last-child { border-bottom: none; }
+        .badge-rank { width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--hijau-bg); color: var(--hijau-tua); font-weight: bold; border: 2px solid var(--hijau-muda); }
 
-        #sidebar ul li a:hover {
-            background: #34495e;
-            color: #fff;
-            padding-left: 25px;
-        }
-
-        #sidebar ul li.active > a {
-            background: #3498db;
-            color: #fff;
-        }
-
-        .main-content {
-            width: 100%;
-            padding: 25px;
-        }
-
-        .admin-card {
-            border: none;
-            border-left: 5px solid #3498db;
-            border-radius: 10px;
-            background: #fff;
-        }
-
-        .chart-container {
-            background: #fff;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        }
-
-        .table-container {
-            background: #fff;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        @media (max-width: 768px) {
+            #sidebar { margin-left: -260px; position: fixed; height: 100vh; }
+            #sidebar.active { margin-left: 0; box-shadow: 5px 0 15px rgba(0,0,0,0.1); }
+            .main-inner { padding: 15px; }
         }
     </style>
 </head>
 <body>
 
 <div class="d-flex">
+    
     <nav id="sidebar">
-        <div class="sidebar-header">
-            <h4 class="fw-bold m-0">Admin Panel</h4>
+        <div class="sidebar-header d-flex align-items-center justify-content-center">
+            <i class="fas fa-leaf fs-3 me-2"></i>
+            <h4 class="fw-bold m-0">EL HA KA</h4>
         </div>
-
-        <ul class="list-unstyled components">
-            <li class="active">
-                <a href="admin_dashboard.php"><i class="fas fa-chart-line me-2"></i> Dashboard</a>
-            </li>
-            <li>
-                <a href="data_nasabah.php"><i class="fas fa-users me-2"></i> Data Nasabah</a>
-            </li>
-            <li>
-                <a href="admin_kelolasampah.php"><i class="fas fa-recycle me-2"></i> Kelola Sampah</a>
-            </li>
-            <li>
-                <a href="admin_kelolaberita.php"><i class="fas fa-newspaper me-2"></i> Kelola Berita</a>
-            </li>
-            <li>
-                <a href="laporan.php"><i class="fas fa-file-invoice me-2"></i> Laporan</a>
-            </li>
-            <li>
-                <a href="../auth/logout.php" class="text-danger"><i class="fas fa-sign-out-alt me-2"></i> Logout</a>
-            </li>
-        </ul>
+            <ul class="list-unstyled components">
+                <li class="<?= basename($_SERVER['PHP_SELF']) == 'admin_dashboard.php' ? 'active' : ''; ?>">
+                    <a href="admin_dashboard.php"><i class="fas fa-chart-line me-3"></i> Dashboard</a>
+                </li>
+                <li class="<?= basename($_SERVER['PHP_SELF']) == 'data_nasabah.php' ? 'active' : ''; ?>">
+                    <a href="data_nasabah.php"><i class="fas fa-users me-3"></i> Data Nasabah</a>
+                </li>
+                <li class="<?= basename($_SERVER['PHP_SELF']) == 'data_setoran.php' ? 'active' : ''; ?>">
+                    <a href="data_setoran.php"><i class="fas fa-balance-scale me-3"></i> Data Setoran</a>
+                </li>
+                <li class="<?= basename($_SERVER['PHP_SELF']) == 'admin_kelolasampah.php' ? 'active' : ''; ?>">
+                    <a href="admin_kelolasampah.php"><i class="fas fa-recycle me-3"></i> Kelola Sampah</a>
+                </li>
+                <li class="<?= basename($_SERVER['PHP_SELF']) == 'admin_kelolaberita.php' ? 'active' : ''; ?>">
+                    <a href="admin_kelolaberita.php"><i class="fas fa-newspaper me-3"></i> Kelola Berita</a>
+                </li>
+                <li class="<?= basename($_SERVER['PHP_SELF']) == 'laporan.php' ? 'active' : ''; ?>">
+                    <a href="laporan.php"><i class="fas fa-file-invoice me-3"></i> Laporan</a>
+                </li>
+                <li class="mt-4">
+                    <a href="../auth/logout.php" class="text-warning"><i class="fas fa-sign-out-alt me-3"></i> Keluar</a>
+                </li>
+            </ul>
     </nav>
 
-    <div class="main-content">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="fw-bold">Dashboard</h2>
-            <div class="dropdown">
-                <button class="btn btn-secondary btn-sm rounded-pill px-3 shadow-sm">
-                    Login sebagai: <span class="fw-bold"><?= $_SESSION['nama']; ?></span>
+    <div id="content">
+        <nav class="navbar top-navbar sticky-top d-flex justify-content-between align-items-center shadow-sm">
+            <div class="d-flex align-items-center">
+                <button type="button" id="sidebarCollapse" class="btn btn-light shadow-sm d-md-none me-3">
+                    <i class="fas fa-bars" style="color: var(--hijau-tua);"></i>
                 </button>
+                <h4 class="fw-bold m-0 d-none d-md-block" style="color: var(--hijau-tua);">Dashboard Statistik</h4>
             </div>
-        </div>
-
-    <div class="row mb-4">
-        <div class="col-md-4 mb-3">
-            <div class="card admin-card shadow-sm h-100">
-                <div class="card-body">
-                    <h6 class="text-muted small fw-bold">TOTAL NASABAH AKTIF</h6>
-                    <h2 class="fw-bold mb-1"><?= $total_nasabah; ?></h2>
-                    <small class="text-success"><i class="fas fa-arrow-up"></i> Terdaftar di sistem</small>
+            <div class="d-flex align-items-center">
+                <span class="text-muted fw-medium me-4 d-none d-md-inline">
+                    <i class="fas fa-calendar-alt me-1"></i> <?= date('d F Y'); ?>
+                </span>
+                
+                <div class="bg-light px-3 py-2 rounded-pill shadow-sm border" style="border-color: rgba(26, 143, 58, 0.2) !important;">
+                    <span class="text-muted small me-1">Login Sebagai:</span>
+                    <span class="fw-bold" style="color: var(--hijau-tua);">
+                        <i class="fas fa-user-circle me-1"></i> <?= htmlspecialchars($nama_admin); ?>
+                    </span>
                 </div>
             </div>
-        </div>
+        </nav>
+        </nav>
 
-        <div class="col-md-4 mb-3">
-            <div class="card admin-card shadow-sm h-100" style="border-left-color: #2ecc71;">
-                <div class="card-body">
-                    <h6 class="text-muted small fw-bold">SAMPAH TERKUMPUL (KG)</h6>
-                    <h2 class="fw-bold mb-1">450 Kg</h2>
-                    <small class="text-primary">Dari seluruh nasabah</small>
-                </div>
-            </div>
-        </div>
-            
-        <div class="col-md-4 mb-3">
-            <div class="card admin-card shadow-sm h-100" style="border-left-color: #f39c12;">
-                <div class="card-body">
-                    <h6 class="text-muted small fw-bold">ANTREAN PENARIKAN</h6>
-                    <h2 class="fw-bold text-danger mb-1">5</h2>
-                    <small class="text-muted">Perlu diproses segera</small>
-                </div>
-            </div>
-        </div>
-    </div>
-
-        <div class="row">
-            <div class="col-lg-8 mb-4">
-                <div class="chart-container shadow-sm h-100">
-                    <h5 class="fw-bold mb-4">Tren Setoran Sampah (Kg)</h5>
-                    <canvas id="adminChart" height="150"></canvas>
-                </div>
-            </div>
-
-            <div class="col-lg-4 mb-4">
-                <div class="table-container shadow-sm h-100">
-                    <div class="p-3 bg-white border-bottom">
-                        <h5 class="fw-bold m-0">Aktivitas Terkini</h5>
+        <div class="main-inner">
+            <div class="row g-4 mb-4">
+                <div class="col-md-6">
+                    <div class="glass-card card-stat p-4 h-100">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-box me-3" style="background: rgba(154, 205, 50, 0.2); color: var(--hijau-tua);">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div>
+                                <h6 class="m-0 text-muted fw-bold mb-1">Total Nasabah Aktif</h6>
+                                <h3 class="fw-bold m-0" style="color: var(--hijau-tua);"><?= $total_nasabah; ?> Orang</h3>
+                            </div>
+                        </div>
                     </div>
-                    <div class="p-0">
-                        <ul class="list-group list-group-flush small">
-                            <li class="list-group-item p-3">
-                                <strong>Moch Allan</strong> <span class="text-muted">Setor Plastik</span>
-                                <div class="text-success small">10 Menit lalu</div>
-                            </li>
-                            <li class="list-group-item p-3">
-                                <strong>Budi Santoso</strong> <span class="text-muted">Tarik Saldo</span>
-                                <div class="text-warning small">1 Jam lalu</div>
-                            </li>
+                </div>
+                <div class="col-md-6">
+                    <div class="glass-card card-stat p-4 h-100" style="border-left-color: var(--hijau-muda);">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-box me-3" style="background: rgba(26, 143, 58, 0.1); color: var(--hijau-tua);">
+                                <i class="fas fa-wallet"></i>
+                            </div>
+                            <div>
+                                <h6 class="m-0 text-muted fw-bold mb-1">Total Saldo Nasabah</h6>
+                                <h3 class="fw-bold m-0" style="color: var(--hijau-tua);">Rp <?= number_format($total_saldo, 0, ',', '.'); ?></h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4 mb-4">
+                <div class="col-lg-12">
+                    <div class="glass-card p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="fw-bold m-0" style="color: var(--hijau-tua);"><i class="fas fa-chart-area me-2"></i>Tren Setoran Sampah (Tahun <?= $tahun_ini; ?>)</h5>
+                            <span class="badge" style="background: var(--hijau-bg); color: var(--hijau-tua);">Dalam Kilogram (Kg)</span>
+                        </div>
+                        <canvas id="trendChart" height="80"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4 mb-4">
+                
+                <div class="col-lg-6">
+                    <div class="glass-card p-4 h-100 border-top border-4" style="border-top-color: var(--hijau-tua) !important;">
+                        <h5 class="fw-bold mb-4" style="color: var(--hijau-tua);"><i class="fas fa-medal me-2 text-warning"></i>Nasabah Terajin Menabung</h5>
+                        <ul class="list-group list-group-flush">
+                            <?php 
+                            $no_n = 1;
+                            if(mysqli_num_rows($q_top_nasabah) > 0):
+                                while($dn = mysqli_fetch_assoc($q_top_nasabah)): 
+                            ?>
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    <div class="d-flex align-items-center">
+                                        <div class="badge-rank me-3 shadow-sm"><?= $no_n++; ?></div>
+                                        <div>
+                                            <h6 class="fw-bold m-0 text-dark"><?= $dn['nama_lengkap']; ?></h6>
+                                            <small class="text-muted">@<?= $dn['username']; ?></small>
+                                        </div>
+                                    </div>
+                                    <div class="text-end">
+                                        <span class="badge rounded-pill bg-success mb-1"><?= $dn['frekuensi']; ?>x Setor</span><br>
+                                        <small class="fw-bold text-muted"><?= number_format($dn['total_berat'], 2, ',', '.'); ?> Kg</small>
+                                    </div>
+                                </li>
+                            <?php 
+                                endwhile; 
+                            else: 
+                                echo "<p class='text-muted text-center my-4'>Belum ada data setoran.</p>";
+                            endif; 
+                            ?>
                         </ul>
                     </div>
                 </div>
+
+                <div class="col-lg-6">
+                    <div class="glass-card p-4 h-100 border-top border-4" style="border-top-color: var(--hijau-muda) !important;">
+                        <h5 class="fw-bold mb-4" style="color: var(--hijau-tua);"><i class="fas fa-box-open me-2 text-info"></i>Sampah Terbanyak Terkumpul</h5>
+                        <ul class="list-group list-group-flush">
+                            <?php 
+                            $no_s = 1;
+                            if(mysqli_num_rows($q_top_sampah) > 0):
+                                while($ds = mysqli_fetch_assoc($q_top_sampah)): 
+                            ?>
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    <div class="d-flex align-items-center">
+                                        <div class="badge-rank me-3 shadow-sm"><?= $no_s++; ?></div>
+                                        <div>
+                                            <h6 class="fw-bold m-0 text-dark"><?= $ds['jenis_sampah']; ?></h6>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h6 class="fw-bold m-0" style="color: var(--hijau-tua);"><?= number_format($ds['total_berat'], 2, ',', '.'); ?> <span class="small text-muted">Kg</span></h6>
+                                    </div>
+                                </li>
+                            <?php 
+                                endwhile; 
+                            else:
+                                echo "<p class='text-muted text-center my-4'>Belum ada data sampah terkumpul.</p>";
+                            endif;
+                            ?>
+                        </ul>
+                    </div>
+                </div>
+
             </div>
+
         </div>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <script>
-    const ctx = document.getElementById('adminChart').getContext('2d');
-    new Chart(ctx, {
+    const ctx = document.getElementById('trendChart').getContext('2d');
+    const dataBerat = <?= $json_data_bulan; ?>;
+    const trendChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: <?= json_encode($data_hari); ?>,
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
             datasets: [{
-                label: 'Berat Sampah (Kg)',
-                data: <?= json_encode($data_berat); ?>,
-                borderColor: '#3498db',
-                backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                label: 'Total Berat (Kg)',
+                data: dataBerat,
+                backgroundColor: 'rgba(154, 205, 50, 0.2)',
+                borderColor: '#1A8F3A', /
                 borderWidth: 3,
+                pointBackgroundColor: '#fff',
+                pointBorderColor: '#1A8F3A',
+                pointBorderWidth: 2,
+                pointRadius: 4,
                 fill: true,
-                tension: 0.4
+                tension: 0.4 
             }]
         },
         options: {
             responsive: true,
+            plugins: {
+                legend: { display: false } 
+            },
             scales: {
-                y: { beginAtZero: true }
+                y: {
+                    beginAtZero: true,
+                    grid: { color: '#f0f0f0' }
+                },
+                x: {
+                    grid: { display: false }
+                }
             }
         }
     });
-</script>
 
+    const sidebar = document.getElementById('sidebar');
+    const sidebarCollapse = document.getElementById('sidebarCollapse');
+    if(sidebarCollapse) {
+        sidebarCollapse.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+        });
+    }
+</script>
 </body>
 </html>
