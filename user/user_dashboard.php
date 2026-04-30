@@ -177,9 +177,9 @@ for ($i = 5; $i >= 0; $i--) {
 <div class="container mt-2 mt-lg-4">
     <div class="header-mobile">
         <div class="d-flex align-items-center">
-            <img src="../assets/uploads/<?= $foto_user; ?>" class="rounded-circle border border-2 border-white shadow-sm" width="65" height="60" style="object-fit: cover;">
+            <img src="../assets/uploads/<?= $foto_user; ?>" class="rounded-circle border border-2 border-white shadow-sm" width="55" height="50" style="object-fit: cover;">
             <div class="ms-2">
-                <p class="text-muted small mb-0">Selamat Datang di Bank Sampah EL HA KA </p>
+                <p class="text-muted small mb-0" style="font-size: 15px;">Selamat Datang di Bank Sampah EL HA KA </p>
                 <h6 class="fw-bold mb-0"><?= $nama_user; ?></h6>
             </div>
         </div>
