@@ -76,7 +76,6 @@ if (isset($_POST['login'])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <style>
-        /* Mengubah tema menjadi hijau sesuai logo */
         :root { 
             --hijau-tua: #1A8F3A;     
             --hijau-muda: #9ACD32;    
@@ -125,7 +124,7 @@ if (isset($_POST['login'])) {
 <nav class="navbar navbar-expand-lg fixed-top navbar-custom shadow-sm">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center" href="../index.php">
-            <img src="../assets/img/LOGO BANK SAMPAH EL HA KA.png" alt="Logo" height="80" class="me-2">
+            <img src="../assets/img/LOGO BANK SAMPAH EL HA KA.png" alt="Logo" height="40" class="me-2">
         </a>
         <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>

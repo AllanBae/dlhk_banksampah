@@ -2,7 +2,6 @@
 session_start();
 include '../config/db.php'; 
 
-// Cek apakah yang login adalah nasabah
 if (!isset($_SESSION['role']) || $_SESSION['role'] != 'nasabah') {
     header("Location: ../auth/login.php");
     exit;
@@ -10,7 +9,6 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] != 'nasabah') {
 
 $user_id = $_SESSION['id']; 
 
-// Ambil data profil untuk mendapatkan nama lengkap, saldo, dan foto
 $query_profil = mysqli_query($conn, "SELECT nama_lengkap, saldo, foto FROM data_nasabah WHERE id = '$user_id'");
 $data_profil = mysqli_fetch_assoc($query_profil);
 
@@ -19,13 +17,11 @@ if ($data_profil) {
     $total_saldo = $data_profil['saldo'];
     $foto_user = !empty($data_profil['foto']) ? $data_profil['foto'] : 'default.png';
 } else {
-    // Jika data di data_nasabah belum lengkap, ambil dari session login
     $nama_user = $_SESSION['nama'];
     $total_saldo = 0;
     $foto_user = 'default.png';
 }
 
-// Ambil statistik berat sampah (SUM) dan jumlah transaksi (COUNT)
 $query_sampah = mysqli_query($conn, "SELECT SUM(berat) as total_berat FROM transaksi WHERE id_nasabah = '$user_id'");
 $data_sampah = mysqli_fetch_assoc($query_sampah);
 $total_berat = $data_sampah['total_berat'] ?? 0;
@@ -34,7 +30,6 @@ $query_transaksi = mysqli_query($conn, "SELECT COUNT(*) as total FROM transaksi 
 $data_transaksi = mysqli_fetch_assoc($query_transaksi);
 $transaksi_bulan_ini = $data_transaksi['total'] ?? 0;
 
-// Persiapan Data Grafik 6 Bulan Terakhir
 $labels_grafik = []; $data_grafik = [];
 for ($i = 5; $i >= 0; $i--) {
     $tgl = date('Y-m', strtotime("-$i month"));
@@ -56,32 +51,87 @@ for ($i = 5; $i >= 0; $i--) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
         :root { --hijau-tua: #1A8F3A; --bg-soft: #f8fafc; }
-        body { background-color: var(--bg-soft); font-family: 'Plus Jakarta Sans', sans-serif; padding-bottom: 90px; }
+        body { background-color: var(--bg-soft); font-family: 'Plus Jakarta Sans', sans-serif; padding-bottom: 100px; }
 
-        /* NAVBAR DESKTOP */
         .navbar-desktop { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border-bottom: 1px solid #e2e8f0; }
         .nav-link { font-weight: 600; color: #64748b !important; transition: 0.3s; padding: 10px 15px !important; }
         .nav-link.active, .nav-link:hover { color: var(--hijau-tua) !important; }
 
-        /* BOTTOM NAV MOBILE */
         .bottom-nav {
-            position: fixed; bottom: 15px; left: 15px; right: 15px;
-            background: #ffffff; height: 70px; display: none;
-            border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: fixed; bottom: 20px; left: 20px; right: 20px;
+            background: #ffffff; height: 65px; display: none;
+            border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             z-index: 9999; justify-content: space-around; align-items: center;
+            border: 1px solid #f1f5f9;
         }
         .nav-item-mobile { text-decoration: none; text-align: center; color: #94a3b8; flex: 1; transition: 0.3s; }
         .nav-item-mobile i { font-size: 1.2rem; display: block; margin-bottom: 2px; }
-        .nav-item-mobile span { font-size: 9px; font-weight: 700; text-transform: uppercase; }
+        .nav-item-mobile span { font-size: 9px; font-weight: 700; text-transform: uppercase; display: block; }
         .nav-item-mobile.active { color: var(--hijau-tua); }
 
-        /* BANNER & CARD */
+        .header-mobile { display: none; padding: 15px 0; align-items: center; justify-content: space-between; }
+        .btn-logout-mobile { 
+            width: 35px; height: 35px; border-radius: 10px; background: #fff1f2; color: #e11d48; 
+            display: flex; align-items: center; justify-content: center; text-decoration: none; border: none;
+        }
+
         .welcome-card { background: linear-gradient(135deg, var(--hijau-tua) 0%, #145c26 100%); color: white; border-radius: 25px; border: none; }
         .stat-card { border: none; border-radius: 20px; background: white; transition: 0.4s; }
         .icon-circle { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; }
 
         @media (max-width: 991px) {
             .navbar-desktop { display: none !important; }
+            .bottom-nav { display: flex; }
+            .header-mobile { display: flex; }
+        }
+        .bottom-nav {
+            position: fixed; 
+            bottom: 15px; 
+            left: 15px;   
+            right: 15px;  
+            background: #ffffff; 
+            height: 70px; 
+            display: none; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            z-index: 9999; 
+            justify-content: space-around; 
+            align-items: center;
+            padding: 0 10px;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .nav-item-mobile { 
+            text-decoration: none; 
+            text-align: center; 
+            color: #94a3b8; 
+            flex: 1; 
+            transition: all 0.3s ease;
+            padding: 8px 0;
+        }
+
+        .nav-item-mobile i { 
+            font-size: 1.3rem; 
+            display: block; 
+            margin-bottom: 4px; 
+        }
+
+        .nav-item-mobile span { 
+            font-size: 9px;
+            font-weight: 700; 
+            display: block;
+            line-height: 1;
+            white-space: nowrap; 
+        }
+
+        .nav-item-mobile.active { 
+            color: var(--hijau-tua); 
+        }
+        .nav-item-mobile.active i {
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 991px) {
             .bottom-nav { display: flex; }
         }
     </style>
@@ -91,7 +141,7 @@ for ($i = 5; $i >= 0; $i--) {
 <nav class="navbar navbar-expand-lg sticky-top navbar-desktop py-3">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center fw-bold text-success" href="#">
-            <img src="../assets/img/LOGO BANK SAMPAH EL HA KA.png" height="40" class="me-2"> EL HA KA
+            <img src="../assets/img/LOGO BANK SAMPAH EL HA KA.png" height="50" class="me-2">Bank Sampah EL HA KA
         </a>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav ms-auto align-items-center">
@@ -99,7 +149,7 @@ for ($i = 5; $i >= 0; $i--) {
                 <li class="nav-item"><a class="nav-link" href="profil.php">Profil</a></li>
                 <li class="nav-item"><a class="nav-link" href="saldo.php">Saldo & Penarikan</a></li>
                 <li class="nav-item"><a class="nav-link" href="riwayat.php">Riwayat Setoran</a></li>
-                <li class="nav-item ms-3"><a class="btn btn-outline-danger rounded-pill px-4" href="../auth/logout.php">Keluar</a></li>
+                <li class="nav-item ms-3"><a class="btn btn-outline-danger rounded-pill px-4 fw-bold" href="../auth/logout.php"><i class="fas fa-sign-out-alt me-1"></i> Keluar</a></li>
             </ul>
         </div>
     </div>
@@ -107,8 +157,8 @@ for ($i = 5; $i >= 0; $i--) {
 
 <div class="bottom-nav">
     <a href="user_dashboard.php" class="nav-item-mobile active">
-        <i class="fas fa-th-large"></i>
-        <span>Dashboard</span>
+        <i class="fas fa-home"></i>
+        <span>Home</span>
     </a>
     <a href="riwayat.php" class="nav-item-mobile">
         <i class="fas fa-history"></i>
@@ -124,7 +174,16 @@ for ($i = 5; $i >= 0; $i--) {
     </a>
 </div>
 
-<div class="container mt-4">
+<div class="container mt-2 mt-lg-4">
+    <div class="header-mobile">
+        <div class="d-flex align-items-center">
+            <img src="../assets/uploads/<?= $foto_user; ?>" class="rounded-circle border border-2 border-white shadow-sm" width="60" height="60" style="object-fit: cover;">
+        </div>
+        <a href="../auth/logout.php" class="btn-logout-mobile shadow-sm" onclick="return confirm('Yakin ingin keluar?')">
+            <i class="fas fa-sign-out-alt"></i>
+        </a>
+    </div>
+
     <div class="welcome-card p-4 p-md-5 mb-4 shadow">
         <h2 class="fw-bold">Halo, <?= $nama_user; ?> 👋</h2>
         <p class="mb-0 opacity-75">Senang melihatmu kembali. Ayo terus berkontribusi untuk lingkungan yang lebih bersih bersama Bank Sampah EL HA KA!</p>
@@ -134,23 +193,23 @@ for ($i = 5; $i >= 0; $i--) {
         <div class="col-6 col-lg-4">
             <div class="card stat-card p-3 shadow-sm h-100">
                 <div class="icon-circle bg-success bg-opacity-10 text-success mb-2"><i class="fas fa-wallet"></i></div>
-                <p class="text-muted small fw-bold mb-1">TOTAL SALDO</p>
-                <h4 class="fw-bold m-0 text-success">Rp <?= number_format($total_saldo, 0, ',', '.'); ?></h4>
+                <p class="text-muted small fw-bold mb-1 text-uppercase" style="letter-spacing: 0.5px; font-size: 10px;">Saldo</p>
+                <h4 class="fw-bold m-0 text-success" style="font-size: 1.1rem;">Rp <?= number_format($total_saldo, 0, ',', '.'); ?></h4>
             </div>
         </div>
         <div class="col-6 col-lg-4">
             <div class="card stat-card p-3 shadow-sm h-100">
                 <div class="icon-circle bg-warning bg-opacity-10 text-warning mb-2"><i class="fas fa-recycle"></i></div>
-                <p class="text-muted small fw-bold mb-1">SAMPAH TERKUMPUL</p>
-                <h4 class="fw-bold m-0 text-dark"><?= number_format($total_berat, 1, ',', '.'); ?> <small class="fs-6 text-muted">Kg</small></h4>
+                <p class="text-muted small fw-bold mb-1 text-uppercase" style="letter-spacing: 0.5px; font-size: 10px;">Setoran</p>
+                <h4 class="fw-bold m-0 text-dark" style="font-size: 1.1rem;"><?= number_format($total_berat, 1, ',', '.'); ?> <small class="fs-6 text-muted">Kg</small></h4>
             </div>
         </div>
         <div class="col-12 col-lg-4">
             <div class="card stat-card p-3 shadow-sm">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <p class="text-muted small fw-bold mb-1">TRANSAKSI BULAN INI</p>
-                        <h4 class="fw-bold m-0 text-dark"><?= $transaksi_bulan_ini; ?> <small class="fs-6 text-muted">Kali</small></h4>
+                        <p class="text-muted small fw-bold mb-0 text-uppercase" style="letter-spacing: 0.5px; font-size: 10px;">Transaksi Bulan Ini</p>
+                        <h4 class="fw-bold m-0 text-dark" style="font-size: 1.1rem;"><?= $transaksi_bulan_ini; ?> <small class="fs-6 text-muted">Kali</small></h4>
                     </div>
                     <div class="icon-circle bg-info bg-opacity-10 text-info"><i class="fas fa-receipt"></i></div>
                 </div>
@@ -159,7 +218,7 @@ for ($i = 5; $i >= 0; $i--) {
     </div>
 
     <div class="card stat-card p-4 mb-5 shadow-sm">
-        <h6 class="fw-bold mb-4 text-muted"><i class="fas fa-chart-line me-2 text-success"></i>Statistik Setoran Sampah (Kg)</h6>
+        <h6 class="fw-bold mb-4 text-muted"><i class="fas fa-chart-line me-2 text-success"></i>PROGRES SETORAN (Kg)</h6>
         <div style="height: 250px;"><canvas id="chartNasabah"></canvas></div>
     </div>
 </div>

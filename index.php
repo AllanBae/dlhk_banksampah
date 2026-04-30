@@ -98,7 +98,7 @@ include 'config/db.php';
     <nav class="navbar navbar-expand-lg fixed-top navbar-custom shadow-sm">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="index.php">
-                <img src="assets/img/LOGO BANK SAMPAH EL HA KA.png" alt="Logo" height="80" class="me-2">
+                <img src="assets/img/LOGO BANK SAMPAH EL HA KA.png" alt="Logo" height="55" class="me-2">
             </a>
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <i class="bi bi-list fs-2" style="color: var(--hijau-tua);"></i>

@@ -63,23 +63,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             --hijau-bg-muda: #f0f8f1; 
         }
         body { background: #f8fafc; font-family: 'Inter', sans-serif; }
+
         .navbar-custom { background: rgba(255, 255, 255, 0.95) !important; backdrop-filter: blur(10px); border-bottom: 2px solid var(--hijau-bg-muda); }
         .navbar-brand { color: var(--hijau-tua) !important; font-weight: 800; font-size: 22px; }
         .nav-link.nav-modern { color: #475569; font-weight: 600; padding: 10px 15px; transition: 0.3s; }
-        .btn-daftar { background: var(--hijau-tua); color: #fff !important; border-radius: 8px; padding: 8px 20px !important; margin-left: 10px; display: inline-block; transition: 0.3s; }
-        .main-content { min-height: 100vh; display: flex; align-items: center; padding: 100px 0 50px; }
-        .signup-form { background: #fff; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-        .form-title { font-weight: 800; color: var(--hijau-tua); margin-bottom: 30px; }
-        .form-control-custom { border-radius: 12px; padding: 12px; border: 1px solid #e2e8f0; transition: 0.3s; }
-        .form-control-custom:focus { border-color: var(--hijau-muda); box-shadow: 0 0 0 0.25rem rgba(154, 205, 50, 0.25); outline: none; }
-        .btn-custom { border-radius: 12px; background: var(--hijau-tua); color: #fff; border: none; padding: 14px; font-weight: 600; width: 100%; transition: 0.3s; }
-        .btn-custom:hover { background: var(--hijau-muda); transform: translateY(-2px); }
+        .nav-link.nav-modern:hover { color: var(--hijau-tua); }
+
+        @media (max-width: 991.98px) {
+            .navbar-collapse { 
+                background: #fff; 
+                margin-top: 10px; 
+                border: 1px solid #e2e8f0; 
+                border-radius: 12px;
+                padding: 10px;
+            }
+            .navbar-nav { align-items: flex-start !important; }
+            .nav-item { width: 100%; border-bottom: 1px solid #f1f5f9; }
+            .nav-item:last-child { border-bottom: none; }
+            .btn-daftar { margin-left: 0 !important; margin-top: 10px; width: 100%; text-align: left !important; }
+        }
+
+        .btn-daftar { background: var(--hijau-tua); color: #fff !important; border-radius: 8px; padding: 8px 20px !important; margin-left: 10px; transition: 0.3s; }
+        .btn-daftar:hover { background: var(--hijau-muda); }
+
+        .main-content { min-height: 100vh; display: flex; align-items: center; padding-top: 80px; }
+        .login-container { max-width: 400px; margin: auto; width: 100%; padding: 15px; }
+        .login-form { background: #fff; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .form-title { font-weight: 800; color: var(--hijau-tua); margin-bottom: 25px; text-align: center; }
+        .form-control-custom { border-radius: 12px; padding: 12px; border: 1px solid #e2e8f0; }
+        .form-control-custom:focus { border-color: var(--hijau-muda); box-shadow: 0 0 0 0.25rem rgba(154, 205, 50, 0.25); }
+        
+        .btn-custom { border-radius: 12px; background: var(--hijau-tua); color: #fff; border: none; padding: 12px; font-weight: 600; width: 100%; transition: 0.3s; }
+        .btn-custom:hover { background: var(--hijau-muda); color: white; }
+        
         .text-hijau { color: var(--hijau-tua); }
-        .form-control-custom::placeholder {
-        color: #a0a0a0; 
-        opacity: 1;}
-        .form-control-custom {
-        color: #6c757d; }
+        .text-hijau:hover { color: var(--hijau-muda); }
     </style>
 </head>
 <body>
@@ -87,8 +105,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <nav class="navbar navbar-expand-lg fixed-top navbar-custom shadow-sm">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center" href="../index.php">
-            <img src="../assets/img/LOGO BANK SAMPAH EL HA KA.png" alt="Logo" height="80" class="me-2">
+            <img src="../assets/img/LOGO BANK SAMPAH EL HA KA.png" alt="Logo" height="40" class="me-2">
         </a>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto align-items-center">
                 <li class="nav-item"><a class="nav-link nav-modern" href="../index.php">Home</a></li>
