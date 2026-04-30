@@ -162,11 +162,11 @@ for ($i = 5; $i >= 0; $i--) {
     </a>
     <a href="riwayat.php" class="nav-item-mobile">
         <i class="fas fa-history"></i>
-        <span>Riwayat</span>
+        <span>Riwayat Setoran</span>
     </a>
     <a href="saldo.php" class="nav-item-mobile">
         <i class="fas fa-wallet"></i>
-        <span>Saldo</span>
+        <span>Penarikan</span>
     </a>
     <a href="profil.php" class="nav-item-mobile">
         <i class="fas fa-user"></i>
@@ -177,7 +177,7 @@ for ($i = 5; $i >= 0; $i--) {
 <div class="container mt-2 mt-lg-4">
     <div class="header-mobile">
         <div class="d-flex align-items-center">
-            <img src="../assets/uploads/<?= $foto_user; ?>" class="rounded-circle border border-2 border-white shadow-sm" width="60" height="60" style="object-fit: cover;">
+            <img src="../assets/uploads/<?= $foto_user; ?>" class="rounded-circle border border-2 border-white shadow-sm" width="65" height="60" style="object-fit: cover;">
         </div>
         <a href="../auth/logout.php" class="btn-logout-mobile shadow-sm" onclick="return confirm('Yakin ingin keluar?')">
             <i class="fas fa-sign-out-alt"></i>
@@ -185,7 +185,7 @@ for ($i = 5; $i >= 0; $i--) {
     </div>
 
     <div class="welcome-card p-4 p-md-5 mb-4 shadow">
-        <h2 class="fw-bold">Halo, <?= $nama_user; ?> 👋</h2>
+        <h2 class="fw-bold">Selamat Datang <?= $nama_user; ?></h2>
         <p class="mb-0 opacity-75">Senang melihatmu kembali. Ayo terus berkontribusi untuk lingkungan yang lebih bersih bersama Bank Sampah EL HA KA!</p>
     </div>
 
