@@ -8,6 +8,7 @@ if (isset($_POST['login'])) {
     $password = trim($_POST['password']);
 
     if ($username && $password) {
+        // --- BAGIAN ADMIN (TIDAK BERUBAH) ---
         $queryAdmin = mysqli_query($conn, "SELECT * FROM admins WHERE usernameAdmin='$username'");
         $admin = mysqli_fetch_assoc($queryAdmin);
 
@@ -19,15 +20,41 @@ if (isset($_POST['login'])) {
             exit;
         } 
 
+        // --- PERBAIKAN BAGIAN USER ---
         else {
             $queryUser = mysqli_query($conn, "SELECT * FROM users WHERE username='$username'");
             $user = mysqli_fetch_assoc($queryUser);
 
             if ($user && password_verify($password, $user['password'])) {
-                $_SESSION['id']       = $user['id'];
+                // Simpan data dasar ke session
                 $_SESSION['username'] = $user['username'];
-                $_SESSION['nama']     = $user['nama']; 
                 $_SESSION['role']     = $user['role'];
+
+                if ($user['role'] == 'nasabah') {
+                    /**
+                     * SOLUSI: Cari ID Allan di tabel data_nasabah (misal ID 15) 
+                     * meskipun di tabel users ID-nya berbeda (misal ID 16).
+                     * Kita cari berdasarkan username yang sama.
+                     */
+                    $username_nasabah = $user['username'];
+                    $queryNasabah = mysqli_query($conn, "SELECT id, nama_lengkap FROM data_nasabah WHERE username='$username_nasabah'");
+                    $nasabah = mysqli_fetch_assoc($queryNasabah);
+
+                    if ($nasabah) {
+                        // Gunakan ID dari tabel data_nasabah agar nyambung ke Saldo & Transaksi
+                        $_SESSION['id']   = $nasabah['id']; 
+                        $_SESSION['nama'] = $nasabah['nama_lengkap']; 
+                    } else {
+                        // Jika data di data_nasabah belum ada, pakai data dari tabel users
+                        $_SESSION['id']   = $user['id'];
+                        $_SESSION['nama'] = $user['nama'];
+                    }
+                } else {
+                    // Jika role bukan nasabah
+                    $_SESSION['id']   = $user['id'];
+                    $_SESSION['nama'] = $user['nama'];
+                }
+
                 header("Location: ../user/user_dashboard.php");
                 exit;
             } else {

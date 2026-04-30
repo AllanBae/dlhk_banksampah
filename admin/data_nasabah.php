@@ -171,6 +171,16 @@ function highlight_keyword($text, $keyword) {
                         <div id="status-alert" class="alert alert-success py-2 px-3 m-0 border-0 shadow-sm">
                             <i class="fas fa-check-circle me-1"></i> Berhasil memperbarui data!
                         </div>
+                        <script>
+                            setTimeout(function() {
+                                var alert = document.getElementById('status-alert');
+                                if (alert) {
+                                    alert.style.transition = "opacity 0.5s ease";
+                                    alert.style.opacity = "0";
+                                    setTimeout(() => alert.remove(), 500);
+                                }
+                            }, 2000);
+                        </script>
                     <?php endif; ?>
                 </div>
                 <form method="GET" class="d-flex gap-2 w-50 justify-content-end">
