@@ -38,53 +38,57 @@ if (isset($_POST['update_profil'])) {
     $alamat         = mysqli_real_escape_string($conn, $_POST['alamat']);
     
     $id_nasabah = $data['id'];
-    
-    $cek_username = mysqli_query($conn, "SELECT id FROM data_nasabah WHERE username='$username_baru' AND id != '$id_nasabah'");
-    
-    if (mysqli_num_rows($cek_username) > 0) {
-        $message = "<div id='alert-msg' class='alert alert-danger border-0 shadow-sm'>Username sudah digunakan!</div>";
-    } else {
-        $foto_db = $data['foto'] ?? 'default.png';
+    $foto_db = $data['foto'];
 
-        if ($_FILES['foto']['name'] != "") {
-            $ekstensi_diperbolehkan = ['png', 'jpg', 'jpeg'];
-            $nama_asli = $_FILES['foto']['name'];
-            $x = explode('.', $nama_asli);
-            $ekstensi = strtolower(end($x));
-            $file_tmp = $_FILES['foto']['tmp_name'];
-            $foto_baru = "user_" . $id_nasabah . "_" . time() . "." . $ekstensi;
-
-            if (in_array($ekstensi, $ekstensi_diperbolehkan)) {
-                if ($foto_db != 'default.png' && !empty($foto_db)) {
-                    $path_foto_lama = "../assets/uploads/" . $foto_db;
-                    if (file_exists($path_foto_lama)) { unlink($path_foto_lama); }
-                }
-                move_uploaded_file($file_tmp, "../assets/uploads/" . $foto_baru);
-                $foto_db = $foto_baru;
-            }
+    // 1. CEK APAKAH USERNAME DIUBAH?
+    // Jika username baru tidak sama dengan username lama di DB
+    if ($username_baru !== $data['username']) {
+        $cek_username = mysqli_query($conn, "SELECT id FROM data_nasabah WHERE username='$username_baru' AND id != '$id_nasabah'");
+        if (mysqli_num_rows($cek_username) > 0) {
+            $message = "<div id='alert-msg' class='alert alert-danger'>Username sudah digunakan!</div>";
+            $username_baru = $data['username']; // Kembalikan ke username lama jika duplikat
         }
+    }
 
-        $sql_update = "UPDATE data_nasabah SET 
-                        nama_lengkap='$nama_lengkap', 
-                        username='$username_baru', 
-                        dinas_instansi='$dinas_instansi', 
-                        no_telp='$no_telp', 
-                        alamat='$alamat',
-                        foto='$foto_db' 
-                       WHERE id='$id_nasabah'";
+    // 2. LOGIKA FOTO (Hanya proses jika ada file diunggah)
+    if ($_FILES['foto']['name'] != "") {
+        $ekstensi_diperbolehkan = ['png', 'jpg', 'jpeg'];
+        $x = explode('.', $_FILES['foto']['name']);
+        $ekstensi = strtolower(end($x));
         
-        if (mysqli_query($conn, $sql_update)) {
-            mysqli_query($conn, "UPDATE users SET username='$username_baru', nama='$nama_lengkap' WHERE id='$id_user'");
-            $_SESSION['username'] = $username_baru;
-            $_SESSION['nama'] = $nama_lengkap;
+        if (in_array($ekstensi, $ekstensi_diperbolehkan)) {
+            $foto_baru = "user_" . $id_nasabah . "_" . time() . "." . $ekstensi;
             
-            $message = "<div id='alert-msg' class='alert alert-success border-0 shadow-sm'>
-                            <i class='bi bi-check-circle-fill'></i> Profil Berhasil Diperbarui!
-                        </div>";
-            $redirect = true;
-            // Refresh data setelah update
-            $data['foto'] = $foto_db;
+            // Hapus foto fisik lama
+            if ($foto_db != 'default.png' && file_exists("../assets/uploads/" . $foto_db)) {
+                unlink("../assets/uploads/" . $foto_db);
+            }
+            
+            move_uploaded_file($_FILES['foto']['tmp_name'], "../assets/uploads/" . $foto_baru);
+            $foto_db = $foto_baru;
         }
+    }
+
+    // 3. UPDATE DATABASE
+    $sql_update = "UPDATE data_nasabah SET 
+                    nama_lengkap='$nama_lengkap', 
+                    username='$username_baru', 
+                    dinas_instansi='$dinas_instansi', 
+                    no_telp='$no_telp', 
+                    alamat='$alamat',
+                    foto='$foto_db' 
+                   WHERE id='$id_nasabah'";
+    
+    if (mysqli_query($conn, $sql_update)) {
+        // Update tabel utama users agar sinkron
+        mysqli_query($conn, "UPDATE users SET username='$username_baru', nama='$nama_lengkap' WHERE id='$id_user'");
+        
+        // Perbarui Session
+        $_SESSION['username'] = $username_baru;
+        $_SESSION['nama'] = $nama_lengkap;
+        
+        $message = "<div id='alert-msg' class='alert alert-success'>Profil Berhasil Diperbarui!</div>";
+        $redirect = true;
     }
 }
 ?>
@@ -147,7 +151,7 @@ if (isset($_POST['update_profil'])) {
 
 <nav class="navbar navbar-expand-lg sticky-top navbar-desktop py-3">
     <div class="container">
-        <a class="navbar-brand d-flex align-items-center fw-bold text-success" href="user_dashboard.php">
+        <a class="navbar-brand d-flex align-items-center fw-bold text-success" href="user_dahsboard.php">
             <img src="../assets/img/LOGO BANK SAMPAH EL HA KA.png" height="40" class="me-2"> EL HA KA
         </a>
         <div class="collapse navbar-collapse">
@@ -198,11 +202,14 @@ if (isset($_POST['update_profil'])) {
                         <h4 class="fw-bold mt-3 mb-0">@<?= htmlspecialchars($data['username']); ?></h4>
                         <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 mt-2">Nasabah Aktif</span>
                     </div>
-
                     <div class="row">
                         <div class="col-md-6">
                             <label class="info-label">Nama Lengkap</label>
                             <input type="text" name="nama_lengkap" class="form-control" value="<?= htmlspecialchars($data['nama_lengkap']); ?>" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="info-label">Username</label>
+                            <input type="text" name="username" class="form-control" value="<?= htmlspecialchars($data['username']); ?>" required>
                         </div>
                     </div>
 

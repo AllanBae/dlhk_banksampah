@@ -101,7 +101,7 @@ $q_top_nasabah = mysqli_query($conn, "SELECT dn.nama_lengkap, dn.username, COUNT
                 <a href="laporan.php"><i class="fas fa-file-invoice me-3"></i> Laporan</a>
             </li>
             <li class="<?= basename($_SERVER['PHP_SELF']) == 'admin_profil.php' ? 'active' : ''; ?>">
-                <a href="admin_profil.php"><i class=""></i> Profil</a>
+                <a href="admin_profil.php"><i class="fas fa-user me-3"></i> Profil</a>
             </li>
             <li>
                 <a href="../auth/logout.php" class="text-warning"><i class="fas fa-sign-out-alt me-3"></i> Keluar</a>
