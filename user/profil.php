@@ -204,10 +204,6 @@ if (isset($_POST['update_profil'])) {
                             <label class="info-label">Nama Lengkap</label>
                             <input type="text" name="nama_lengkap" class="form-control" value="<?= htmlspecialchars($data['nama_lengkap']); ?>" required>
                         </div>
-                        <div class="col-md-6">
-                            <label class="info-label">Username</label>
-                            <input type="text" name="username" class="form-control" value="<?= htmlspecialchars($data['username']); ?>" required>
-                        </div>
                     </div>
 
                     <label class="info-label">Dinas / Instansi</label>
