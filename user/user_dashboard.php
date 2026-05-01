@@ -26,9 +26,10 @@ $query_sampah = mysqli_query($conn, "SELECT SUM(berat) as total_berat FROM trans
 $data_sampah = mysqli_fetch_assoc($query_sampah);
 $total_berat = $data_sampah['total_berat'] ?? 0;
 
-$query_transaksi = mysqli_query($conn, "SELECT COUNT(*) as total FROM transaksi WHERE id_nasabah = '$user_id' AND MONTH(tanggal) = MONTH(CURRENT_DATE())");
-$data_transaksi = mysqli_fetch_assoc($query_transaksi);
-$transaksi_bulan_ini = $data_transaksi['total'] ?? 0;
+// Ambil statistik Penarikan Bulan Ini dari tabel penarikan
+$query_penarikan = mysqli_query($conn, "SELECT COUNT(*) as total FROM penarikan WHERE user_id = '$user_id' AND MONTH(tanggal_penarikan) = MONTH(CURRENT_DATE()) AND YEAR(tanggal_penarikan) = YEAR(CURRENT_DATE())");
+$data_penarikan = mysqli_fetch_assoc($query_penarikan);
+$transaksi_bulan_ini = $data_penarikan['total'] ?? 0;
 
 $labels_grafik = []; $data_grafik = [];
 for ($i = 5; $i >= 0; $i--) {
@@ -202,14 +203,24 @@ for ($i = 5; $i >= 0; $i--) {
                 <h4 class="fw-bold m-0 text-dark" style="font-size: 1.1rem;"><?= number_format($total_berat, 1, ',', '.'); ?> <small class="fs-6 text-muted">Kg</small></h4>
             </div>
         </div>
-        <div class="col-12 col-lg-4">
-            <div class="card stat-card p-3 shadow-sm">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <p class="text-muted small fw-bold mb-0 text-uppercase" style="letter-spacing: 0.5px; font-size: 10px;">Transaksi Bulan Ini</p>
-                        <h4 class="fw-bold m-0 text-dark" style="font-size: 1.1rem;"><?= $transaksi_bulan_ini; ?> <small class="fs-6 text-muted">Kali</small></h4>
+        <div class="col-12 col-lg-4 d-none d-md-block">
+    <div class="card stat-card p-3 shadow-sm">
+        <div class="d-flex align-items-center justify-content-between">
+            <div>
+                <p class="text-muted small fw-bold mb-1">PENARIKAN BULAN INI</p>
+                <h4 class="fw-bold m-0 text-dark"><?= $transaksi_bulan_ini; ?> <small class="fs-6 text-muted">Kali</small></h4>
+            </div>
+            <div class="icon-circle bg-info bg-opacity-10 text-info"><i class="fas fa-money-bill-wave"></i></div>
+        </div>
+    </div>
+</div>
+
+            <div class="col-12 d-md-none">
+                <div class="card stat-card p-3 shadow-sm">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <p class="text-muted small fw-bold mb-0">Penarikan Bulan Ini:</p>
+                        <span class="badge bg-info bg-opacity-10 text-info px-3 py-2 rounded-pill fw-bold"><?= $transaksi_bulan_ini; ?> Kali</span>
                     </div>
-                    <div class="icon-circle bg-info bg-opacity-10 text-info"><i class="fas fa-receipt"></i></div>
                 </div>
             </div>
         </div>
