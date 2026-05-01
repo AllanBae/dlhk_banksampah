@@ -147,7 +147,7 @@ if (isset($_POST['update_profil'])) {
 
 <nav class="navbar navbar-expand-lg sticky-top navbar-desktop py-3">
     <div class="container">
-        <a class="navbar-brand d-flex align-items-center fw-bold text-success" href="#">
+        <a class="navbar-brand d-flex align-items-center fw-bold text-success" href="user_dashboard.php">
             <img src="../assets/img/LOGO BANK SAMPAH EL HA KA.png" height="40" class="me-2"> EL HA KA
         </a>
         <div class="collapse navbar-collapse">

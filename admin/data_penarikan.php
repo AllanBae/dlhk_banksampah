@@ -73,7 +73,7 @@ $total_berhasil = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as tot
             <i class="fas fa-recycle fs-3 me-2" style="color: #9ACD32;"></i>
             <h4 class="fw-bold m-0">EL HA KA</h4>
         </div>
- <ul class="list-unstyled components">
+        <ul class="list-unstyled components">
             <li class="<?= basename($_SERVER['PHP_SELF']) == 'admin_dashboard.php' ? 'active' : ''; ?>">
                 <a href="admin_dashboard.php"><i class="fas fa-chart-line me-3"></i> Dashboard</a>
             </li>
@@ -100,6 +100,7 @@ $total_berhasil = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as tot
             </li>
         </ul>
     </nav>
+
 
     <div id="content">
         <nav class="navbar top-navbar sticky-top d-flex justify-content-between align-items-center shadow-sm">
