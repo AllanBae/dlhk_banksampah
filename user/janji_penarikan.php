@@ -175,17 +175,17 @@ $query_p = mysqli_query($conn, "SELECT * FROM penarikan WHERE user_id='$id_nasab
 </div>
 
 <div class="bottom-nav">
-    <a href="user_dashboard.php" class="nav-item-mobile">
+    <a href="user_dashboard.php" class="nav-item-mobile active">
         <i class="fas fa-home"></i>
         <span>Home</span>
     </a>
     <a href="riwayat.php" class="nav-item-mobile">
         <i class="fas fa-history"></i>
-        <span>Riwayat</span>
+        <span>Riwayat Setoran</span>
     </a>
-    <a href="saldo.php" class="nav-item-mobile active">
+    <a href="saldo.php" class="nav-item-mobile">
         <i class="fas fa-wallet"></i>
-        <span>Saldo</span>
+        <span>Penarikan</span>
     </a>
     <a href="profil.php" class="nav-item-mobile">
         <i class="fas fa-user"></i>
