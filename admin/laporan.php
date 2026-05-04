@@ -119,7 +119,7 @@ $nama_bulan = array('', 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 
         <nav class="navbar top-navbar sticky-top d-flex justify-content-between align-items-center shadow-sm no-print">
             <div class="d-flex align-items-center">
                 <button type="button" id="sidebarCollapse" class="btn btn-light d-md-none me-3"><i class="fas fa-bars"></i></button>
-                <h4 class="fw-bold m-0 text-success">Laporan Keuangan</h4>
+                <h4 class="fw-bold m-0 text-success">Laporan Setoran</h4>
             </div>
         </nav>
 

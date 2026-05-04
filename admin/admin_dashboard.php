@@ -152,7 +152,7 @@ $q_top_nasabah = mysqli_query($conn, "SELECT dn.nama_lengkap, dn.username, COUNT
                                 <i class="fas fa-wallet"></i>
                             </div>
                             <div>
-                                <h6 class="m-0 text-muted fw-bold mb-1">Total Saldo Nasabah</h6>
+                                <h6 class="m-0 text-muted fw-bold mb-1">Total Semua Saldo Nasabah Yang Aktif</h6>
                                 <h3 class="fw-bold m-0" style="color: var(--hijau-tua);">Rp <?= number_format($total_saldo, 0, ',', '.'); ?></h3>
                             </div>
                         </div>
