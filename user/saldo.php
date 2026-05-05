@@ -2,6 +2,7 @@
 session_start();
 include '../config/db.php';
 
+// Proteksi Halaman
 if (!isset($_SESSION['id']) || $_SESSION['role'] !== 'nasabah') {
     header("Location: ../auth/login.php");
     exit();
@@ -17,7 +18,7 @@ $data = mysqli_fetch_assoc($query_n);
 $saldo_aktif = (int)($data['saldo'] ?? 0);
 $id_nasabah = $data['id'];
 
-// 2. Proses Buat Janji Penarikan (Backend Validation)
+// 2. Proses Buat Janji Penarikan
 if (isset($_POST['buat_janji'])) {
     $jumlah = (int)$_POST['jumlah'];
     $tgl_janji = mysqli_real_escape_string($conn, $_POST['tgl_janji']);
@@ -33,7 +34,8 @@ if (isset($_POST['buat_janji'])) {
             $message = "<div class='alert alert-success border-0 shadow-sm text-center'>
                             <i class='fas fa-check-circle me-1'></i> Janji berhasil dibuat!
                         </div>";
-            // Refresh saldo aktif setelah input sukses
+            
+            // Refresh saldo tampilan
             $query_n = mysqli_query($conn, "SELECT saldo FROM data_nasabah WHERE id='$id_nasabah'");
             $data_refresh = mysqli_fetch_assoc($query_n);
             $saldo_aktif = (int)$data_refresh['saldo'];
@@ -55,9 +57,10 @@ if (isset($_POST['buat_janji'])) {
         :root { --hijau-tua: #1A8F3A; --hijau-muda: #2ecc71; --bg-soft: #f8fafc; }
         body { background-color: var(--bg-soft); font-family: 'Plus Jakarta Sans', sans-serif; padding-bottom: 100px; }
         
+        /* Navbar Styling */
         .navbar-desktop { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border-bottom: 1px solid #e2e8f0; }
-        .nav-link { font-weight: 600; color: #64748b !important; }
-        .nav-link.active { color: var(--hijau-tua) !important; }
+        .nav-link { font-weight: 600; color: #64748b !important; transition: 0.3s; }
+        .nav-link:hover, .nav-link.active { color: var(--hijau-tua) !important; }
 
         .card-saldo {
             background: linear-gradient(135deg, var(--hijau-tua) 0%, var(--hijau-muda) 100%);
@@ -66,11 +69,6 @@ if (isset($_POST['buat_janji'])) {
         }
 
         .form-control { border-radius: 12px; padding: 12px; border: 1px solid #e2e8f0; font-weight: 600; }
-        .form-control:focus { border-color: var(--hijau-tua); box-shadow: none; }
-
-        /* Real-time Note Style */
-        #noteSaldo { font-size: 0.85rem; transition: 0.3s; }
-
         .bottom-nav {
             position: fixed; bottom: 20px; left: 20px; right: 20px;
             background: #ffffff; height: 65px; display: none;
@@ -91,13 +89,24 @@ if (isset($_POST['buat_janji'])) {
 
 <nav class="navbar navbar-expand-lg sticky-top navbar-desktop py-3">
     <div class="container">
-        <a class="navbar-brand fw-bold text-success" href="#">EL HA KA</a>
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav ms-auto">
+        <a class="navbar-brand d-flex align-items-center fw-bold text-success" href="user_dashboard.php">
+            <img src="../assets/img/LOGO BANK SAMPAH EL HA KA.png" height="40" class="me-2"> 
+            <span>EL HA KA</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto align-items-center">
                 <li class="nav-item"><a class="nav-link" href="user_dashboard.php">Dashboard</a></li>
-                <li class="nav-item"><a class="nav-link active" href="saldo.php">Saldo</a></li>
                 <li class="nav-item"><a class="nav-link" href="profil.php">Profil</a></li>
-                <li class="nav-item ms-3"><a class="btn btn-outline-danger rounded-pill px-4" href="../auth/logout.php">Keluar</a></li>
+                <li class="nav-item"><a class="nav-link active" href="saldo.php">Saldo & Penarikan</a></li>
+                <li class="nav-item"><a class="nav-link" href="riwayat.php">Riwayat Setoran</a></li>
+                <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
+                    <a class="btn btn-outline-danger rounded-pill px-4 fw-bold w-100" href="../auth/logout.php">
+                        <i class="fas fa-sign-out-alt me-1"></i> Keluar
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
@@ -111,43 +120,36 @@ if (isset($_POST['buat_janji'])) {
                 <p class="mb-1 opacity-75">Saldo Aktif Anda</p>
                 <h1 class="fw-bold mb-0">Rp <?= number_format($saldo_aktif, 0, ',', '.'); ?></h1>
                 <div class="mt-3 small">
-                    <i class="fas fa-wallet me-1"></i> Saldo dapat ditarik tunai dengan datang langsung ke DLHK Provinsi
+                    <i class="fas fa-info-circle me-1"></i> Penarikan dilakukan di kantor DLHK.
                 </div>
             </div>
 
             <div class="card border-0 shadow-sm p-4 rounded-4">
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="fw-bold m-0">Penarikan</h5>
-                    <a href="janji_penarikan.php" class="btn btn-sm btn-light rounded-pill text-success fw-bold">Riwayat Penarikan</a>
+                    <h5 class="fw-bold m-0 text-success">Form Penarikan</h5>
+                    <a href="janji_penarikan.php" class="btn btn-sm btn-light rounded-pill text-success fw-bold">Riwayat</a>
                 </div>
 
                 <?= $message; ?>
 
                 <form action="" method="POST" id="formTarik">
                     <div class="mb-3">
-                        <label class="form-label small fw-bold text-muted">NOMINAL PENARIKAN</label>
+                        <label class="form-label small fw-bold text-muted">NOMINAL (RP)</label>
                         <div class="input-group">
                             <span class="input-group-text bg-light border-end-0">Rp</span>
-                            <input type="number" id="jumlahInput" name="jumlah" class="form-control border-start-0" placeholder="Contoh: 50000" required>
+                            <input type="number" id="jumlahInput" name="jumlah" class="form-control border-start-0" placeholder="50000" required>
                         </div>
-                        <div id="noteSaldo" class="text-danger mt-2 fw-600" style="display: none;">
-                            <i class="fas fa-times-circle"></i> Saldo Anda tidak mencukupi!
+                        <div id="noteSaldo" class="text-danger mt-2 fw-bold" style="display: none; font-size: 12px;">
+                            <i class="fas fa-exclamation-circle me-1"></i> Saldo Anda tidak mencukupi!
                         </div>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label small fw-bold text-muted">TANGGAL KEDATANGAN</label>
+                        <label class="form-label small fw-bold text-muted">RENCANA TANGGAL DATANG</label>
                         <input type="date" name="tgl_janji" class="form-control" min="<?= date('Y-m-d'); ?>" required>
                     </div>
 
-                    <div class="bg-light p-3 rounded-3 mb-4">
-                        <p class="mb-0 text-muted" style="font-size: 11px; line-height: 1.5;">
-                            <i class="fas fa-info-circle me-1"></i> 
-                            Saldo Anda akan berkurang jika sudah datang ke DLHK
-                        </p>
-                    </div>
-
-                    <button type="submit" id="btnKonfirmasi" name="buat_janji" class="btn btn-success w-100 fw-bold p-3 rounded-3 shadow-sm" style="background: var(--hijau-tua);">
+                    <button type="submit" id="btnKonfirmasi" name="buat_janji" class="btn btn-success w-100 fw-bold p-3 rounded-3 shadow-sm mt-2" style="background: var(--hijau-tua);">
                         Konfirmasi Janji Penarikan
                     </button>
                 </form>
@@ -181,26 +183,21 @@ if (isset($_POST['buat_janji'])) {
         const value = parseInt(this.value) || 0;
 
         if (value > saldoUser) {
-            // Tampilkan Note Merah
             noteSaldo.style.display = 'block';
             this.classList.add('is-invalid');
-            
-            // Matikan Tombol
             btnKonfirmasi.disabled = true;
-            btnKonfirmasi.style.opacity = '0.6';
             btnKonfirmasi.innerText = 'Saldo Tidak Cukup';
+            btnKonfirmasi.style.opacity = '0.6';
         } else {
-            // Sembunyikan Note
             noteSaldo.style.display = 'none';
             this.classList.remove('is-invalid');
-            
-            // Aktifkan Tombol
             btnKonfirmasi.disabled = false;
-            btnKonfirmasi.style.opacity = '1';
             btnKonfirmasi.innerText = 'Konfirmasi Janji Penarikan';
+            btnKonfirmasi.style.opacity = '1';
         }
     });
 </script>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -109,6 +109,8 @@ $query_setoran = mysqli_query($conn, "
 </head>
 <body>
 
+<div class="sidebar-overlay" id="overlay"></div>
+
 <div class="d-flex"> 
     <nav id="sidebar">
         <div class="sidebar-header d-flex align-items-center justify-content-center">
@@ -136,6 +138,9 @@ $query_setoran = mysqli_query($conn, "
             </li>
             <li class="<?= basename($_SERVER['PHP_SELF']) == 'laporan.php' ? 'active' : ''; ?>">
                 <a href="laporan.php"><i class="fas fa-file-invoice me-3"></i> Laporan</a>
+            </li>
+            <li class="<?= basename($_SERVER['PHP_SELF']) == 'admin_profil.php' ? 'active' : ''; ?>">
+                <a href="admin_profil.php"><i class="fas fa-user me-3"></i> Profil</a>
             </li>
             <li>
                 <a href="../auth/logout.php" class="text-warning"><i class="fas fa-sign-out-alt me-3"></i> Keluar</a>

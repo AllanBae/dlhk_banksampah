@@ -9,6 +9,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] != 'nasabah') {
 
 $user_id = $_SESSION['id']; 
 
+// 1. Ambil data profil & saldo
 $query_profil = mysqli_query($conn, "SELECT nama_lengkap, saldo, foto FROM data_nasabah WHERE id = '$user_id'");
 $data_profil = mysqli_fetch_assoc($query_profil);
 
@@ -22,15 +23,17 @@ if ($data_profil) {
     $foto_user = 'default.png';
 }
 
+// 2. Statistik Sampah
 $query_sampah = mysqli_query($conn, "SELECT SUM(berat) as total_berat FROM transaksi WHERE id_nasabah = '$user_id'");
 $data_sampah = mysqli_fetch_assoc($query_sampah);
 $total_berat = $data_sampah['total_berat'] ?? 0;
 
-// Ambil statistik Penarikan Bulan Ini dari tabel penarikan
+// 3. Statistik Penarikan Bulan Ini
 $query_penarikan = mysqli_query($conn, "SELECT COUNT(*) as total FROM penarikan WHERE user_id = '$user_id' AND MONTH(tanggal_penarikan) = MONTH(CURRENT_DATE()) AND YEAR(tanggal_penarikan) = YEAR(CURRENT_DATE())");
 $data_penarikan = mysqli_fetch_assoc($query_penarikan);
 $transaksi_bulan_ini = $data_penarikan['total'] ?? 0;
 
+// 4. Data Grafik (6 Bulan Terakhir)
 $labels_grafik = []; $data_grafik = [];
 for ($i = 5; $i >= 0; $i--) {
     $tgl = date('Y-m', strtotime("-$i month"));
@@ -54,29 +57,30 @@ for ($i = 5; $i >= 0; $i--) {
         :root { --hijau-tua: #1A8F3A; --bg-soft: #f8fafc; }
         body { background-color: var(--bg-soft); font-family: 'Plus Jakarta Sans', sans-serif; padding-bottom: 100px; }
 
+        /* NAVBAR DESKTOP */
         .navbar-desktop { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border-bottom: 1px solid #e2e8f0; }
         .nav-link { font-weight: 600; color: #64748b !important; transition: 0.3s; padding: 10px 15px !important; }
         .nav-link.active, .nav-link:hover { color: var(--hijau-tua) !important; }
 
+        /* BOTTOM NAV MOBILE */
         .bottom-nav {
             position: fixed; bottom: 20px; left: 20px; right: 20px;
             background: #ffffff; height: 65px; display: none;
             border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             z-index: 9999; justify-content: space-around; align-items: center;
-            border: 1px solid #f1f5f9;
+            border: 1px solid rgba(0,0,0,0.05);
         }
         .nav-item-mobile { text-decoration: none; text-align: center; color: #94a3b8; flex: 1; transition: 0.3s; }
         .nav-item-mobile i { font-size: 1.2rem; display: block; margin-bottom: 2px; }
-        .nav-item-mobile span { font-size: 9px; font-weight: 700; text-transform: uppercase; display: block; }
+        .nav-item-mobile span { font-size: 9px; font-weight: 700; display: block; }
         .nav-item-mobile.active { color: var(--hijau-tua); }
 
+        /* CARDS */
         .header-mobile { display: none; padding: 15px 0; align-items: center; justify-content: space-between; }
         .btn-logout-mobile { 
             width: 35px; height: 35px; border-radius: 10px; background: #fff1f2; color: #e11d48; 
-            display: flex; align-items: center; justify-content: center; text-decoration: none; border: none;
+            display: flex; align-items: center; justify-content: center; text-decoration: none;
         }
-
-        .welcome-card { background: linear-gradient(135deg, var(--hijau-tua) 0%, #145c26 100%); color: white; border-radius: 25px; border: none; }
         .stat-card { border: none; border-radius: 20px; background: white; transition: 0.4s; }
         .icon-circle { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; }
 
@@ -85,64 +89,14 @@ for ($i = 5; $i >= 0; $i--) {
             .bottom-nav { display: flex; }
             .header-mobile { display: flex; }
         }
-        .bottom-nav {
-            position: fixed; 
-            bottom: 15px; 
-            left: 15px;   
-            right: 15px;  
-            background: #ffffff; 
-            height: 70px; 
-            display: none; 
-            border-radius: 20px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            z-index: 9999; 
-            justify-content: space-around; 
-            align-items: center;
-            padding: 0 10px;
-            border: 1px solid rgba(0,0,0,0.05);
-        }
-
-        .nav-item-mobile { 
-            text-decoration: none; 
-            text-align: center; 
-            color: #94a3b8; 
-            flex: 1; 
-            transition: all 0.3s ease;
-            padding: 8px 0;
-        }
-
-        .nav-item-mobile i { 
-            font-size: 1.3rem; 
-            display: block; 
-            margin-bottom: 4px; 
-        }
-
-        .nav-item-mobile span { 
-            font-size: 9px;
-            font-weight: 700; 
-            display: block;
-            line-height: 1;
-            white-space: nowrap; 
-        }
-
-        .nav-item-mobile.active { 
-            color: var(--hijau-tua); 
-        }
-        .nav-item-mobile.active i {
-            transform: translateY(-3px);
-        }
-
-        @media (max-width: 991px) {
-            .bottom-nav { display: flex; }
-        }
     </style>
 </head>
 <body>
 
 <nav class="navbar navbar-expand-lg sticky-top navbar-desktop py-3">
     <div class="container">
-        <a class="navbar-brand d-flex align-items-center fw-bold text-success" href="#">
-            <img src="../assets/img/LOGO BANK SAMPAH EL HA KA.png" height="50" class="me-2">Bank Sampah EL HA KA
+        <a class="navbar-brand d-flex align-items-center fw-bold text-success" href="user_dashboard.php">
+            <img src="../assets/img/LOGO BANK SAMPAH EL HA KA.png" height="40" class="me-2"> EL HA KA
         </a>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav ms-auto align-items-center">
@@ -158,29 +112,25 @@ for ($i = 5; $i >= 0; $i--) {
 
 <div class="bottom-nav">
     <a href="user_dashboard.php" class="nav-item-mobile active">
-        <i class="fas fa-home"></i>
-        <span>Home</span>
+        <i class="fas fa-home"></i><span>Home</span>
     </a>
     <a href="riwayat.php" class="nav-item-mobile">
-        <i class="fas fa-history"></i>
-        <span>Riwayat Setoran</span>
+        <i class="fas fa-history"></i><span>Riwayat</span>
     </a>
     <a href="saldo.php" class="nav-item-mobile">
-        <i class="fas fa-wallet"></i>
-        <span>Penarikan</span>
+        <i class="fas fa-wallet"></i><span>Penarikan</span>
     </a>
     <a href="profil.php" class="nav-item-mobile">
-        <i class="fas fa-user"></i>
-        <span>Profil</span>
+        <i class="fas fa-user"></i><span>Profil</span>
     </a>
 </div>
 
 <div class="container mt-2 mt-lg-4">
     <div class="header-mobile">
         <div class="d-flex align-items-center">
-            <img src="../assets/uploads/<?= $foto_user; ?>" class="rounded-circle border border-2 border-white shadow-sm" width="55" height="50" style="object-fit: cover;">
+            <img src="../assets/uploads/<?= $foto_user; ?>" class="rounded-circle border border-2 border-white shadow-sm" width="50" height="50" style="object-fit: cover;" onerror="this.src='https://ui-avatars.com/api/?name=<?= urlencode($nama_user); ?>'">
             <div class="ms-2">
-                <p class="text-muted small mb-0" style="font-size: 15px;">Selamat Datang di Bank Sampah EL HA KA </p>
+                <p class="text-muted small mb-0">Halo, Selamat Datang</p>
                 <h6 class="fw-bold mb-0"><?= $nama_user; ?></h6>
             </div>
         </div>
@@ -188,39 +138,30 @@ for ($i = 5; $i >= 0; $i--) {
             <i class="fas fa-sign-out-alt"></i>
         </a>
     </div>
+
     <div class="row g-3 mb-4">
         <div class="col-6 col-lg-4">
             <div class="card stat-card p-3 shadow-sm h-100">
                 <div class="icon-circle bg-success bg-opacity-10 text-success mb-2"><i class="fas fa-wallet"></i></div>
-                <p class="text-muted small fw-bold mb-1 text-uppercase" style="letter-spacing: 0.5px; font-size: 10px;">Saldo</p>
-                <h4 class="fw-bold m-0 text-success" style="font-size: 1.1rem;">Rp <?= number_format($total_saldo, 0, ',', '.'); ?></h4>
+                <p class="text-muted small fw-bold mb-1 text-uppercase">Saldo</p>
+                <h4 class="fw-bold m-0 text-success">Rp <?= number_format($total_saldo, 0, ',', '.'); ?></h4>
             </div>
         </div>
         <div class="col-6 col-lg-4">
             <div class="card stat-card p-3 shadow-sm h-100">
                 <div class="icon-circle bg-warning bg-opacity-10 text-warning mb-2"><i class="fas fa-recycle"></i></div>
-                <p class="text-muted small fw-bold mb-1 text-uppercase" style="letter-spacing: 0.5px; font-size: 10px;">Setoran</p>
-                <h4 class="fw-bold m-0 text-dark" style="font-size: 1.1rem;"><?= number_format($total_berat, 1, ',', '.'); ?> <small class="fs-6 text-muted">Kg</small></h4>
+                <p class="text-muted small fw-bold mb-1 text-uppercase">Setoran</p>
+                <h4 class="fw-bold m-0 text-dark"><?= number_format($total_berat, 1, ',', '.'); ?> <small class="fs-6 text-muted">Kg</small></h4>
             </div>
         </div>
-        <div class="col-12 col-lg-4 d-none d-md-block">
-    <div class="card stat-card p-3 shadow-sm">
-        <div class="d-flex align-items-center justify-content-between">
-            <div>
-                <p class="text-muted small fw-bold mb-1">PENARIKAN BULAN INI</p>
-                <h4 class="fw-bold m-0 text-dark"><?= $transaksi_bulan_ini; ?> <small class="fs-6 text-muted">Kali</small></h4>
-            </div>
-            <div class="icon-circle bg-info bg-opacity-10 text-info"><i class="fas fa-money-bill-wave"></i></div>
-        </div>
-    </div>
-</div>
-
-            <div class="col-12 d-md-none">
-                <div class="card stat-card p-3 shadow-sm">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <p class="text-muted small fw-bold mb-0">Penarikan Bulan Ini:</p>
-                        <span class="badge bg-info bg-opacity-10 text-info px-3 py-2 rounded-pill fw-bold"><?= $transaksi_bulan_ini; ?> Kali</span>
+        <div class="col-12 col-lg-4 d-none d-lg-block">
+            <div class="card stat-card p-3 shadow-sm">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <p class="text-muted small fw-bold mb-1">PENARIKAN BULAN INI</p>
+                        <h4 class="fw-bold m-0 text-dark"><?= $transaksi_bulan_ini; ?> <small class="fs-6 text-muted">Kali</small></h4>
                     </div>
+                    <div class="icon-circle bg-info bg-opacity-10 text-info"><i class="fas fa-money-bill-wave"></i></div>
                 </div>
             </div>
         </div>

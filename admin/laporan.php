@@ -38,7 +38,7 @@ $nama_bulan = array('', 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan Keuangan | Admin</title>
+    <title>Laporan | Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
@@ -107,6 +107,9 @@ $nama_bulan = array('', 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 
             </li>
             <li class="<?= basename($_SERVER['PHP_SELF']) == 'laporan.php' ? 'active' : ''; ?>">
                 <a href="laporan.php"><i class="fas fa-file-invoice me-3"></i> Laporan</a>
+            </li>
+            <li class="<?= basename($_SERVER['PHP_SELF']) == 'admin_profil.php' ? 'active' : ''; ?>">
+                <a href="admin_profil.php"><i class="fas fa-user me-3"></i> Profil</a>
             </li>
             <li>
                 <a href="../auth/logout.php" class="text-warning"><i class="fas fa-sign-out-alt me-3"></i> Keluar</a>
