@@ -106,6 +106,77 @@ include 'config/db.php';
             }
         }
 
+
+        /* Styling Visi & Misi Modern */
+        .visi-misi-box {
+            background: #ffffff;
+            border-radius: 30px;
+            padding: 40px;
+            border: 1px solid rgba(0,0,0,0.02);
+            height: 100%;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .visi-misi-box:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(26, 143, 58, 0.1) !important;
+        }
+
+        /* Dekorasi Lingkaran Halus di Belakang Kartu */
+        .visi-misi-box::before {
+            content: "";
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 120px;
+            height: 120px;
+            background: rgba(154, 205, 50, 0.05);
+            border-radius: 50%;
+            transition: 0.4s;
+        }
+
+        .visi-misi-box:hover::before {
+            background: rgba(154, 205, 50, 0.1);
+            transform: scale(1.5);
+        }
+
+        .icon-circle {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--hijau-tua), var(--hijau-muda));
+            color: white;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 20px rgba(26, 143, 58, 0.2);
+        }
+
+        .visi-misi-box h4 {
+            color: var(--hijau-tua);
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+
+        .list-misi li {
+            padding: 12px 15px;
+            background: #f8fafc;
+            border-radius: 15px;
+            margin-bottom: 12px !important;
+            transition: 0.3s;
+            border: 1px solid transparent;
+        }
+
+        .list-misi li:hover {
+            background: white;
+            border-color: var(--hijau-muda);
+            transform: translateX(5px);
+        }
+
     </style>
 </head>
 <body>
@@ -119,6 +190,7 @@ include 'config/db.php';
                     <small class="fw-800 text-success" style="font-size: 0.7rem; letter-spacing: 1px;">EL HA KA</small>
                 </div>
             </a>
+
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <i class="bi bi-grid-fill"></i> </button>
             <div class="collapse navbar-collapse" id="navbarNav">
@@ -212,6 +284,49 @@ include 'config/db.php';
                     <?php endwhile; ?>
                 </div>
                 <div class="swiper-pagination"></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5" style="background: linear-gradient(to bottom, #f8fafc, #ffffff);">
+        <div class="container py-5">
+            <div class="text-center mb-5">
+                <h2 class="section-title d-block">Visi & Misi</h2>
+            </div>       
+            <div class="row g-4 justify-content-center">
+                <div class="col-lg-5 col-md-6">
+                    <div class="visi-misi-box shadow-sm">
+                        <div class="icon-circle">
+                            <i class="bi bi-rocket-takeoff"></i>
+                        </div>
+                        <h4 class="fw-800 text-uppercase">Visi</h4>
+                        <p class="text-secondary lh-lg mb-0" style="font-size: 1.05rem;">
+                            Menjadi pelopor pengelolaan sampah mandiri berbasis teknologi untuk mewujudkan masyarakat <strong>Bangka Belitung</strong> yang peduli lingkungan dan mandiri secara ekonomi.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <div class="visi-misi-box shadow-sm">
+                        <div class="icon-circle">
+                            <i class="bi bi-patch-check"></i>
+                        </div>
+                        <h4 class="fw-800 text-uppercase">Misi</h4>
+                        <ul class="text-secondary list-unstyled list-misi">
+                            <li class="d-flex align-items-start">
+                                <i class="bi bi-shield-check text-success me-3 fs-5"></i>
+                                <span>Memberikan edukasi masif mengenai pentingnya pemilahan sampah dari sumbernya.</span>
+                            </li>
+                            <li class="d-flex align-items-start">
+                                <i class="bi bi-shield-check text-success me-3 fs-5"></i>
+                                <span>Menyediakan platform tabungan digital yang transparan, aman, dan akurat bagi nasabah.</span>
+                            </li>
+                            <li class="d-flex align-items-start">
+                                <i class="bi bi-shield-check text-success me-3 fs-5"></i>
+                                <span>Membangun kolaborasi strategis dengan pemerintah dalam pelestarian ekosistem lokal.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
