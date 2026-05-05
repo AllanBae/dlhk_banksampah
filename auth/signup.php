@@ -53,68 +53,115 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up - Bank Sampah</title>
+    <title>Daftar Nasabah - Bank Sampah EL HA KA</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    
     <style>
         :root { 
             --hijau-tua: #1A8F3A;     
             --hijau-muda: #9ACD32;    
-            --hijau-bg-muda: #f0f8f1; 
+            --soft-bg: #f8fafc; 
         }
-        body { background: #f8fafc; font-family: 'Inter', sans-serif; }
 
-        .navbar-custom { background: rgba(255, 255, 255, 0.95) !important; backdrop-filter: blur(10px); border-bottom: 2px solid var(--hijau-bg-muda); }
-        .navbar-brand { color: var(--hijau-tua) !important; font-weight: 800; font-size: 22px; }
-        .nav-link.nav-modern { color: #475569; font-weight: 600; padding: 10px 15px; transition: 0.3s; }
-        .nav-link.nav-modern:hover { color: var(--hijau-tua); }
+        body { 
+            background-color: var(--soft-bg); 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            color: #1e293b;
+        }
+
+        /* NAVBAR */
+        .navbar-custom { background: rgba(255, 255, 255, 0.9) !important; backdrop-filter: blur(15px); border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .navbar-brand img { height: 45px; }
 
         @media (max-width: 991.98px) {
-            .navbar-collapse { 
-                background: #fff; 
-                margin-top: 10px; 
-                border: 1px solid #e2e8f0; 
-                border-radius: 12px;
-                padding: 10px;
+            .navbar-collapse {
+                background: white; margin-top: 15px; border-radius: 20px; padding: 15px;
+                box-shadow: 0 15px 30px rgba(0,0,0,0.1); border: 1px solid rgba(0,0,0,0.05);
             }
-            .navbar-nav { align-items: flex-start !important; }
-            .nav-item { width: 100%; border-bottom: 1px solid #f1f5f9; }
-            .nav-item:last-child { border-bottom: none; }
-            .btn-daftar { margin-left: 0 !important; margin-top: 10px; width: 100%; text-align: left !important; }
+            .nav-item { width: 100%; border-bottom: 1px solid #f8fafc; }
+            .nav-link { padding: 12px !important; }
+            .btn-login-nav { background: var(--hijau-tua) !important; color: white !important; margin-top: 5px; text-align: center !important; border-radius: 12px; }
         }
 
-        .btn-daftar { background: var(--hijau-tua); color: #fff !important; border-radius: 8px; padding: 8px 20px !important; margin-left: 10px; transition: 0.3s; }
-        .btn-daftar:hover { background: var(--hijau-muda); }
+        /* SIGNUP CARD */
+        .main-content { min-height: 100vh; display: flex; align-items: center; padding: 120px 0 60px; }
+        
+        .signup-card {
+            background: white;
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.04);
+            border: 1px solid rgba(0,0,0,0.02);
+        }
 
-        .main-content { min-height: 100vh; display: flex; align-items: center; padding-top: 80px; }
-        .login-container { max-width: 400px; margin: auto; width: 100%; padding: 15px; }
-        .login-form { background: #fff; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
-        .form-title { font-weight: 800; color: var(--hijau-tua); margin-bottom: 25px; text-align: center; }
-        .form-control-custom { border-radius: 12px; padding: 12px; border: 1px solid #e2e8f0; }
-        .form-control-custom:focus { border-color: var(--hijau-muda); box-shadow: 0 0 0 0.25rem rgba(154, 205, 50, 0.25); }
+        .form-title { font-weight: 800; color: var(--hijau-tua); margin-bottom: 10px; }
+        .form-subtitle { color: #64748b; margin-bottom: 40px; }
+
+        .form-label { font-weight: 600; font-size: 0.8rem; color: #475569; margin-bottom: 8px; letter-spacing: 0.5px; }
+
+        .input-group-custom {
+            background: #f1f5f9;
+            border: 2px solid transparent;
+            border-radius: 15px;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            margin-bottom: 20px;
+        }
+
+        .input-group-custom:focus-within {
+            border-color: var(--hijau-muda);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(154, 205, 50, 0.1);
+        }
+
+        .input-group-custom i { color: #94a3b8; font-size: 1.1rem; }
         
-        .btn-custom { border-radius: 12px; background: var(--hijau-tua); color: #fff; border: none; padding: 12px; font-weight: 600; width: 100%; transition: 0.3s; }
-        .btn-custom:hover { background: var(--hijau-muda); color: white; }
-        
-        .text-hijau { color: var(--hijau-tua); }
-        .text-hijau:hover { color: var(--hijau-muda); }
+        .form-control-blank {
+            background: transparent;
+            border: none;
+            padding: 12px 10px;
+            width: 100%;
+            outline: none;
+            color: #1e293b;
+            font-weight: 500;
+        }
+
+        .btn-signup {
+            background: linear-gradient(45deg, var(--hijau-tua), var(--hijau-muda));
+            color: white;
+            border: none;
+            border-radius: 15px;
+            padding: 15px;
+            width: 100%;
+            font-weight: 700;
+            transition: 0.3s;
+            box-shadow: 0 10px 20px rgba(26, 143, 58, 0.2);
+        }
+
+        .btn-signup:hover { transform: translateY(-2px); box-shadow: 0 15px 25px rgba(26, 143, 58, 0.3); color: white; }
+
+        .toggle-pass { cursor: pointer; color: #94a3b8; }
     </style>
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg fixed-top navbar-custom shadow-sm">
+<nav class="navbar navbar-expand-lg fixed-top navbar-custom py-3">
     <div class="container">
-        <a class="navbar-brand d-flex align-items-center" href="../index.php">
-            <img src="../assets/img/LOGO BANK SAMPAH EL HA KA.png" alt="Logo" height="40" class="me-2">
+        <a class="navbar-brand" href="../index.php">
+            <img src="../assets/img/LOGO BANK SAMPAH EL HA KA.png" alt="Logo">
         </a>
-        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
+        <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <i class="bi bi-grid-fill text-success fs-2"></i>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto align-items-center">
-                <li class="nav-item"><a class="nav-link nav-modern" href="../index.php">Home</a></li>
-                <li class="nav-item"><a class="nav-link nav-modern" href="login.php">Login</a></li>
-                <li class="nav-item"><a class="nav-link btn-daftar shadow-sm" href="signup.php">Register</a></li>
+                <li class="nav-item"><a class="nav-link fw-bold mx-2" href="../index.php">Beranda</a></li>
+                <li class="nav-item"><a class="nav-link fw-bold mx-2" href="login.php">Masuk</a></li>
+                <li class="nav-item ms-lg-3"><a class="nav-link btn-login-nav px-4 fw-bold" href="signup.php" style="color: var(--hijau-tua);">Daftar</a></li>
             </ul>
         </div>
     </div>
@@ -123,45 +170,75 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="main-content">
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-lg-10">
-                <div class="signup-form">
-                    <h2 class="text-center form-title">Daftar Nasabah Baru</h2>
-                    
+            <div class="col-lg-9">
+                <div class="signup-card">
+                    <div class="text-center">
+                        <h2 class="form-title">Daftar Nasabah Baru</h2>
+                        <p class="form-subtitle">Mulai menabung cerdas dengan sampah rumah tangga</p>
+                    </div>
+
                     <?php if ($error || $success): ?>
-                        <div class="alert <?= $error ? 'alert-danger' : 'alert-success' ?> border-0 shadow-sm mb-4 text-center rounded-3">
+                        <div class="alert <?= $error ? 'alert-danger' : 'alert-success' ?> border-0 rounded-4 py-3 mb-4 text-center">
+                            <i class="bi <?= $error ? 'bi-exclamation-triangle' : 'bi-check-circle' ?> me-2"></i>
                             <?= $error ?: $success ?>
                         </div>
                     <?php endif; ?>
 
                     <form action="" method="POST">
-                        <div class="row g-4">
+                        <div class="row">
                             <div class="col-md-6">
-                                <div><label class="form-label fw-bold small text-muted mb-1">NAMA LENGKAP</label><input type="text" name="nama_user" class="form-control form-control-custom" placeholder="Masukkan nama lengkap" required></div>
-                                <div class="mt-3"><label class="form-label fw-bold small text-muted mb-1">NO. WHATSAPP</label><input type="number" name="no_hp" class="form-control form-control-custom" placeholder="Contoh: 08123456789" required></div>
-                                <div class="mt-3"><label class="form-label fw-bold small text-muted mb-1">ALAMAT</label><textarea name="alamat" class="form-control form-control-custom" placeholder="Alamat lengkap" style="height: 115px;" required></textarea></div>
+                                <label class="form-label text-uppercase">Nama Lengkap</label>
+                                <div class="input-group-custom">
+                                    <i class="bi bi-person"></i>
+                                    <input type="text" name="nama_user" class="form-control-blank" placeholder="Nama sesuai KTP" required>
+                                </div>
+
+                                <label class="form-label text-uppercase">No. WhatsApp</label>
+                                <div class="input-group-custom">
+                                    <i class="bi bi-whatsapp"></i>
+                                    <input type="number" name="no_hp" class="form-control-blank" placeholder="0812xxxx" required>
+                                </div>
+
+                                <label class="form-label text-uppercase">Alamat</label>
+                                <div class="input-group-custom align-items-start pt-2">
+                                    <i class="bi bi-geo-alt mt-1"></i>
+                                    <textarea name="alamat" class="form-control-blank" placeholder="Alamat lengkap rumah" style="height: 100px;" required></textarea>
+                                </div>
                             </div>
+
                             <div class="col-md-6">
-                                <div><label class="form-label fw-bold small text-muted mb-1">USERNAME</label><input type="text" name="username" class="form-control form-control-custom" placeholder="Buat username" required></div>
-                                <div class="mt-3">
-                                    <label class="form-label fw-bold small text-muted mb-1">DINAS/INSTANSI (Opsional)</label>
-                                    <input type="text" name="instansi" class="form-control form-control-custom text-secondary" placeholder="Kosongkan jika tidak ada">
-                                </div>                               
-                                <div class="mt-3">
-                                    <label class="form-label fw-bold small text-muted mb-1">PASSWORD</label>
-                                    <div class="input-group">
-                                        <input type="password" name="password" id="password" class="form-control form-control-custom" placeholder="Buat kata sandi" required style="border-right: none;">
-                                        <span class="input-group-text bg-white form-control-custom" id="togglePassword" style="cursor:pointer; border-radius: 0 12px 12px 0; border-left: none;">
-                                            <i class="bi bi-eye text-muted"></i>
-                                        </span>
-                                    </div>
+                                <label class="form-label text-uppercase">Username</label>
+                                <div class="input-group-custom">
+                                    <i class="bi bi-at"></i>
+                                    <input type="text" name="username" class="form-control-blank" placeholder="username mudah diingat" required>
+                                </div>
+
+                                <label class="form-label text-uppercase">Dinas / Instansi <span class="text-muted" style="font-size: 0.7rem;">(Opsional)</span></label>
+                                <div class="input-group-custom">
+                                    <i class="bi bi-building"></i>
+                                    <input type="text" name="instansi" class="form-control-blank" placeholder="Nama kantor/instansi">
+                                </div>
+
+                                <label class="form-label text-uppercase">Password</label>
+                                <div class="input-group-custom">
+                                    <i class="bi bi-lock"></i>
+                                    <input type="password" name="password" id="password" class="form-control-blank" placeholder="••••••••" required>
+                                    <i class="bi bi-eye toggle-pass" id="togglePassword"></i>
+                                </div>
+
+                                <div class="mt-4 pt-2">
+                                    <button type="submit" class="btn btn-signup">
+                                        Buat Akun Sekarang <i class="bi bi-person-plus-fill ms-2"></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                        <div class="mt-5 text-center">
-                            <button type="submit" class="btn btn-custom shadow-sm fs-5">Buat Akun Sekarang</button>
-                            <p class="mt-3 small">Sudah punya akun? <a href="login.php" class="text-hijau fw-bold text-decoration-none">Login di sini</a></p>
-                        </div>
                     </form>
+
+                    <div class="text-center mt-4">
+                        <span class="text-muted small">Sudah punya akun?</span> 
+                        <a href="login.php" class="text-success fw-bold text-decoration-none small ms-1">Login di sini</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -175,8 +252,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     togglePassword.addEventListener('click', function () {
         const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
         password.setAttribute('type', type);
-        this.querySelector('i').classList.toggle('bi-eye');
-        this.querySelector('i').classList.toggle('bi-eye-slash');
+        this.classList.toggle('bi-eye');
+        this.classList.toggle('bi-eye-slash');
     });
 </script>
 </body>
