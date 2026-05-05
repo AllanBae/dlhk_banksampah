@@ -121,12 +121,15 @@ $q_top_nasabah = mysqli_query($conn, "SELECT dn.nama_lengkap, dn.username, COUNT
                     <i class="fas fa-calendar-alt me-1"></i> <?= date('d F Y'); ?>
                 </span>
                 
-                <div class="bg-light px-3 py-2 rounded-pill shadow-sm border" style="border-color: rgba(26, 143, 58, 0.2) !important;">
-                    <span class="text-muted small me-1 d-none d-sm-inline">Login Sebagai:</span>
-                    <span class="fw-bold" style="color: var(--hijau-tua);">
-                        <i class="fas fa-user-circle me-1"></i> <?= htmlspecialchars($nama_admin); ?>
-                    </span>
-                </div>
+               <a href="admin_profil.php" class="text-decoration-none">
+                    <div class="bg-light px-3 py-2 rounded-pill shadow-sm border hover-profile" style="border-color: rgba(26, 143, 58, 0.2) !important; cursor: pointer;">
+                        <span class="text-muted small me-1 d-none d-sm-inline">Login Sebagai:</span>
+                        <span class="fw-bold" style="color: var(--hijau-tua);">
+                            <i class="fas fa-user-circle me-1"></i> <?= htmlspecialchars($nama_admin); ?>
+                        </span>
+                    </div>
+                </a>
+                
             </div>
         </nav>
 

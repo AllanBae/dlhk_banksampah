@@ -7,56 +7,53 @@ if (isset($_POST['login'])) {
     $username = mysqli_real_escape_string($conn, trim($_POST['username']));
     $password = trim($_POST['password']);
 
-    if ($username && $password) {
-        // --- BAGIAN ADMIN (TIDAK BERUBAH) ---
+    if (!empty($username) && !empty($password)) {
+        
+        // 1. CEK KE TABEL ADMINS DULU
         $queryAdmin = mysqli_query($conn, "SELECT * FROM admins WHERE usernameAdmin='$username'");
         $admin = mysqli_fetch_assoc($queryAdmin);
 
         if ($admin && md5($password) == $admin['passwordAdmin']) {
-            $_SESSION['idAdmin'] = $admin['idAdmin'];
-            $_SESSION['nama']    = $admin['namaAdmin']; 
-            $_SESSION['role']    = 'admin';
-            header("Location: ../admin/admin_dashboard.php"); 
-            exit;
-        } 
+            // Login Admin Sukses
+            $_SESSION['idAdmin']  = $admin['idAdmin'];
+            $_SESSION['username'] = $admin['usernameAdmin']; 
+            $_SESSION['nama']     = $admin['namaAdmin'];
+            $_SESSION['role']     = 'admin'; 
 
-        // --- PERBAIKAN BAGIAN USER ---
-        else {
+            header("Location: ../admin/admin_dashboard.php");
+            exit();
+
+        } else {
+            // 2. JIKA BUKAN ADMIN, CEK KE TABEL USERS (NASABAH/DLL)
             $queryUser = mysqli_query($conn, "SELECT * FROM users WHERE username='$username'");
             $user = mysqli_fetch_assoc($queryUser);
 
             if ($user && password_verify($password, $user['password'])) {
-                // Simpan data dasar ke session
+                // Login User/Nasabah Sukses
                 $_SESSION['username'] = $user['username'];
                 $_SESSION['role']     = $user['role'];
 
                 if ($user['role'] == 'nasabah') {
-                    /**
-                     * SOLUSI: Cari ID Allan di tabel data_nasabah (misal ID 15) 
-                     * meskipun di tabel users ID-nya berbeda (misal ID 16).
-                     * Kita cari berdasarkan username yang sama.
-                     */
+                    // Cari data detail di tabel data_nasabah
                     $username_nasabah = $user['username'];
                     $queryNasabah = mysqli_query($conn, "SELECT id, nama_lengkap FROM data_nasabah WHERE username='$username_nasabah'");
                     $nasabah = mysqli_fetch_assoc($queryNasabah);
 
                     if ($nasabah) {
-                        // Gunakan ID dari tabel data_nasabah agar nyambung ke Saldo & Transaksi
                         $_SESSION['id']   = $nasabah['id']; 
                         $_SESSION['nama'] = $nasabah['nama_lengkap']; 
                     } else {
-                        // Jika data di data_nasabah belum ada, pakai data dari tabel users
                         $_SESSION['id']   = $user['id'];
                         $_SESSION['nama'] = $user['nama'];
                     }
                 } else {
-                    // Jika role bukan nasabah
+                    // Role selain nasabah
                     $_SESSION['id']   = $user['id'];
                     $_SESSION['nama'] = $user['nama'];
                 }
 
                 header("Location: ../user/user_dashboard.php");
-                exit;
+                exit();
             } else {
                 $error = "Username atau Password salah!";
             }
