@@ -333,7 +333,7 @@ include 'config/db.php';
 
     <div class="container my-5 py-5">
         <div class="text-center mb-4">
-            <h3 class="fw-bold">LOKASI KAMI</h3>
+            <h3 class="section-title d-block">LOKASI KAMI</h3>
         </div>
         <div class="ratio ratio-21x9 shadow-lg rounded-5 overflow-hidden">
             <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.123456789!2d106.1234567!3d-2.1234567!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMsKwMDcnMjQuNCJTIDEwNsKwMDcnMjQuNCJF!5e0!3m2!1sen!2sid!4v1714900000000" loading="lazy"></iframe>
