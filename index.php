@@ -336,7 +336,11 @@ include 'config/db.php';
             <h3 class="section-title d-block">LOKASI KAMI</h3>
         </div>
         <div class="ratio ratio-21x9 shadow-lg rounded-5 overflow-hidden">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.123456789!2d106.1234567!3d-2.1234567!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMsKwMDcnMjQuNCJTIDEwNsKwMDcnMjQuNCJF!5e0!3m2!1sen!2sid!4v1714900000000" loading="lazy"></iframe>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1993.4959200678015!2d106.16249407303434!3d-2.15679906
+                4601704!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e22b89f3cf48499%3A0x84872973b1f8bdb2!2sDinas%20Lingkungan
+                %20Hidup%20Provinsi%20Kep.Bangka%20Belitung!5e0!3m2!1sid!2sid!4v1777992609974!5m2!1sid!2sid" 
+                width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" 
+                referrerpolicy="no-referrer-when-downgrade"></iframe>></iframe>
         </div>
     </div>
 
