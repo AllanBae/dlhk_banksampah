@@ -11,6 +11,7 @@ include 'config/db.php';
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     
     <style>
         /* 1. MENGUBAH VARIABEL WARNA SESUAI LOGO */
@@ -91,6 +92,9 @@ include 'config/db.php';
 
         .text-potong { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; height: 4.5em; }
         .judul-potong { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 3em; }
+
+        .swiper { width: 100%; padding-top: 10px; padding-bottom: 50px; }
+        .swiper-slide { height: auto; }
     </style>
 </head>
 <body>
@@ -143,21 +147,24 @@ include 'config/db.php';
                 <p class="text-muted">Harga tukar sampah terkini per kilogram</p>
             </div>
             
-            <div class="scrolling-wrapper">
-                <?php
-                $res = mysqli_query($conn, "SELECT * FROM harga_sampah");
-                while($row = mysqli_fetch_assoc($res)):
-                ?>
-                <div class="scrolling-card">
-                    <div class="card shadow-sm border-0 h-100">
-                        <img src="assets/sampah_img/<?= $row['gambar']; ?>" class="card-img-top" alt="sampah" style="height: 180px; object-fit: cover; border-radius: 15px 15px 0 0;">
-                        <div class="card-body text-center">
-                            <h5 class="fw-bold"><?= $row['jenis_sampah']; ?></h5>
-                            <p class="fw-bold fs-5" style="color: var(--hijau-tua);">Rp <?= number_format($row['harga'], 0, ',', '.'); ?> <small class="text-muted">/kg</small></p>
+            <div class="swiper mySwiperHarga">
+                <div class="swiper-wrapper">
+                    <?php
+                    $res = mysqli_query($conn, "SELECT * FROM harga_sampah");
+                    while($row = mysqli_fetch_assoc($res)):
+                    ?>
+                    <div class="swiper-slide">
+                        <div class="card shadow-sm border-0 h-100" style="border-radius: 15px;">
+                            <img src="assets/sampah_img/<?= $row['gambar']; ?>" class="card-img-top" alt="sampah" style="height: 180px; object-fit: cover; border-radius: 15px 15px 0 0;">
+                            <div class="card-body text-center">
+                                <h6 class="fw-bold text-dark mb-2"><?= $row['jenis_sampah']; ?></h6>
+                                <p class="fw-bold fs-5 mb-0" style="color: var(--hijau-tua);">Rp <?= number_format($row['harga'], 0, ',', '.'); ?> <small class="text-muted" style="font-size: 0.7rem;">/kg</small></p>
+                            </div>
                         </div>
                     </div>
+                    <?php endwhile; ?>
                 </div>
-                <?php endwhile; ?>
+                <div class="swiper-pagination"></div>
             </div>
         </div>
     </section>
@@ -165,36 +172,32 @@ include 'config/db.php';
     <section class="py-5 bg-white shadow-sm">
         <div class="container"> 
             <div class="text-center mb-5">
-                <h2 class="fw-bold m-0"><i class="bi bi-newspaper me-2" style="color: var(--hijau-tua);"></i>Berita Terkini</h2>
+                <h2 class="fw-bold m-0">
+                    <i class="bi bi-newspaper me-2" style="color: var(--hijau-tua);"></i>Berita Terkini
+                </h2>
                 <p class="text-muted">Update informasi seputar lingkungan</p>
             </div>
-
-            <div class="scrolling-wrapper">
-                <?php
-                $query_berita = mysqli_query($conn, "SELECT * FROM berita ORDER BY id DESC");
-                while($b = mysqli_fetch_assoc($query_berita)):
-                ?>
-                <div class="scrolling-card">
-                    <div class="card shadow-sm h-100 border-0 overflow-hidden">
-                        <img src="assets/berita_img/<?= $b['gambar'] ? $b['gambar'] : 'news-default.jpg'; ?>" 
-                             class="card-img-top" style="height: 180px; object-fit: cover;"
-                             onerror="this.src='https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=300&q=80'">
-                        <div class="card-body p-4">
-                            <small class="text-muted d-block mb-2"><i class="bi bi-calendar-event me-1"></i> <?= date('d M Y', strtotime($b['tanggal'])); ?></small>
-                            <h6 class="fw-bold judul-potong"><?= $b['judul']; ?></h6>
-                            <button class="btn btn-link p-0 text-decoration-none fw-bold mt-2" 
-                                    style="color: var(--hijau-tua);"
-                                    data-bs-toggle="modal" data-bs-target="#modalDetailBerita"
-                                    data-judul="<?= htmlspecialchars($b['judul']); ?>"
-                                    data-tanggal="<?= date('d F Y', strtotime($b['tanggal'])); ?>"
-                                    data-isi="<?= htmlspecialchars($b['isi']); ?>"
-                                    data-gambar="assets/berita_img/<?= $b['gambar'] ? $b['gambar'] : 'news-default.jpg'; ?>">
-                                Baca selengkapnya
-                            </button>
+            <div class="swiper swiperBerita pb-5">
+                <div class="swiper-wrapper">
+                    <?php
+                    $query_berita = mysqli_query($conn, "SELECT * FROM berita ORDER BY id DESC");
+                    while($b = mysqli_fetch_assoc($query_berita)):
+                    ?>
+                    <div class="swiper-slide">
+                        <div class="card shadow-sm h-100 border-0 overflow-hidden" style="border-radius: 20px;">
+                            <img src="assets/berita_img/<?= $b['gambar'] ?: 'news-default.jpg'; ?>" class="card-img-top" style="height: 180px; object-fit: cover;">
+                            <div class="card-body p-4">
+                                <small class="text-muted d-block mb-2"><i class="bi bi-calendar-event me-1"></i> <?= date('d M Y', strtotime($b['tanggal'])); ?></small>
+                                <h6 class="fw-bold judul-potong"><?= $b['judul']; ?></h6>
+                                <button class="btn btn-link p-0 text-decoration-none fw-bold mt-2" style="color: var(--hijau-tua);" data-bs-toggle="modal" data-bs-target="#modalDetailBerita" data-judul="<?= htmlspecialchars($b['judul']); ?>" data-tanggal="<?= date('d F Y', strtotime($b['tanggal'])); ?>" data-isi="<?= htmlspecialchars($b['isi']); ?>" data-gambar="assets/berita_img/<?= $b['gambar'] ?: 'news-default.jpg'; ?>">
+                                    Baca selengkapnya
+                                </button>
+                            </div>
                         </div>
                     </div>
+                    <?php endwhile; ?>
                 </div>
-                <?php endwhile; ?>
+                <div class="swiper-pagination"></div>
             </div>
         </div>
     </section>
@@ -271,5 +274,49 @@ include 'config/db.php';
             });
         });
     </script> 
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+    var swiper = new Swiper(".mySwiperHarga", {
+        slidesPerView: 1.5,      // Tampilan awal di mobile (terlihat sedikit slide berikutnya)
+        spaceBetween: 20,       // Jarak antar card
+        loop: true,             // Membuat slide tidak berhenti (berputar terus)
+        centeredSlides: true,   // Card aktif berada di tengah
+        autoplay: {
+        delay: 3000,          // Slide otomatis setiap 5 detik
+        disableOnInteraction: false, // Tetap otomatis meski sudah disentuh user
+        },
+        pagination: {
+        el: ".swiper-pagination",
+        clickable: true,
+        },
+        breakpoints: {
+        // Ketika layar >= 576px (Tablet)
+        576: {
+            slidesPerView: 2.5,
+        },
+        // Ketika layar >= 992px (Desktop)
+        992: {
+            slidesPerView: 4,
+            centeredSlides: false,
+        },
+        },
+    });
+
+        var swiperBerita = new Swiper(".swiperBerita", {
+        slidesPerView: 1.2,
+        spaceBetween: 20,
+        loop: true,
+        autoplay: { delay: 3000 }, // Sama-sama 5 detik
+        pagination: {
+        el: ".swiper-pagination",
+        clickable: true,
+        },
+        breakpoints: {
+        992: { slidesPerView: 3 }, // Berita biasanya lebih lebar dari card harga
+        768: { slidesPerView: 2 }
+        }
+    });
+    </script>
 </body>
 </html>
