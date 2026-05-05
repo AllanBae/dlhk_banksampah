@@ -95,6 +95,66 @@ include 'config/db.php';
 
         .swiper { width: 100%; padding-top: 10px; padding-bottom: 50px; }
         .swiper-slide { height: auto; }
+
+        .footer-top-modern {
+            background: linear-gradient(135deg, var(--hijau-tua) 0%, #146e2d 100%);
+            color: white;
+            padding: 60px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Dekorasi Lingkaran di Background */
+        .footer-top-modern::before {
+            content: ''; position: absolute; width: 300px; height: 300px;
+            background: rgba(255,255,255,0.05); border-radius: 50%;
+            top: -100px; right: -100px;
+        }
+
+        .about-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            padding: 40px;
+            transition: 0.4s;
+        }
+
+        .about-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .social-icon-box {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            background: white;
+            color: var(--hijau-tua);
+            border-radius: 12px;
+            margin: 0 10px;
+            font-size: 1.2rem;
+            transition: 0.3s;
+            text-decoration: none;
+        }
+
+        .social-icon-box:hover {
+            background: var(--hijau-muda);
+            color: white;
+            transform: rotate(15deg);
+        }
+
+        .contact-link {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .contact-link:hover {
+            color: var(--hijau-muda);
+        }
     </style>
 </head>
 <body>
@@ -233,16 +293,65 @@ include 'config/db.php';
     <div class="container my-5">
         <h3 class="text-center fw-bold">LOKASI KAMI</h3>
         <div class="ratio ratio-16x9 mt-3">
-            <iframe src="https://maps.google.com/maps?q=Dinas%20Lingkungan%20Hidup%20dan%20Kehutanan%20Provinsi%20Kep.Bangka%20Belitung&t=&z=13&ie=UTF8&iwloc=&output=embed" allowfullscreen></iframe>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d63791.544361838525!2d106.
+                1310700634766!3d-2.1645379364525406!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e22b89f3cf48499%3A0x84872973b1f8bdb2!2sDinas%20Lingkungan%20Hidup%20dan%20Kehutanan%20
+                Provinsi%20Kep.Bangka%20Belitung!5e0!3m2!1sen!2sus!4v1777984003240!5m2!1sen!2sus" 
+                width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" 
+                referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
         </div>
     </div>
 
-    <footer class="py-5 text-center">
+    <section class="footer-top-modern mt-5">
         <div class="container">
-            <h5 class="fw-bold mb-2" style="color: var(--hijau-tua);">Bank Sampah DLH Provinsi BANGKA BELITUNG</h5>
-            <p class="small text-muted mb-0">© 2026 Hak Cipta Terlindungi.</p>
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <div class="about-card shadow-lg">
+                        <img src="assets/img/LOGO BANK SAMPAH EL HA KA.png" alt="Logo" height="80" class="mb-4 bg-white p-2 rounded-4">
+                        <h2 class="fw-bold mb-3">Tentang Kami</h2>
+                        <p class="lead mb-4 opacity-75">
+                            Bank Sampah adalah platform untuk menukar sampah menjadi 
+                            uang sekaligus menjaga lingkungan.
+                        </p>
+
+                        <div class="row justify-content-center mb-4">
+                            <div class="col-md-6">
+                                <div class="p-3 rounded-4 border border-white border-opacity-25 shadow-sm" style="background: rgba(255,255,255,0.1);">
+                                    <h6 class="text-uppercase fw-bold mb-3" style="letter-spacing: 1px; color: var(--hijau-muda);">
+                                        <i class="bi bi-clock-history me-2"></i>Jadwal Operasional
+                                    </h6>
+                                    <div class="d-flex justify-content-center gap-3">
+                                        <div class="text-start">
+                                            <small class="d-block opacity-75">BUKA HARI :</small>
+                                            <span class="fw-bold">Kamis</span>
+                                        </div>
+                                        <div class="vr opacity-25"></div>
+                                        <div class="text-start">
+                                            <small class="d-block opacity-75">JAM :</small>
+                                            <span class="fw-bold">08.00 - 09.00</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center align-items-center flex-wrap gap-4 mb-4">
+                            <a href="https://www.instagram.com/banksampah_elhaka?igsh=c3V3amc3MWE2cGhh" target="_blank" class="social-icon-box">
+                                <i class="bi bi-instagram"></i>
+                            </a>
+                            <a href="https://chat.whatsapp.com/GONj6HKnCiE6wW3zQ4BDHX?mode=gi_t" target="_blank" class="social-icon-box">
+                                <i class="bi bi-whatsapp"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </footer>
+    </section>
+
+            <footer class="py-4 text-center bg-dark text-white border-0">
+                <div class="container">
+                    <p class="small mb-0 opacity-50">&copy; 2026 Bank Sampah DLH Provinsi Bangka Belitung.</p>
+                </div>
+            </footer>
 
     <div class="modal fade" id="modalDetailBerita" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
