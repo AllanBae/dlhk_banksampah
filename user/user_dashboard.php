@@ -128,11 +128,15 @@ for ($i = 5; $i >= 0; $i--) {
 <div class="container mt-2 mt-lg-4">
     <div class="header-mobile">
         <div class="d-flex align-items-center">
-            <img src="../assets/uploads/<?= $foto_user; ?>" class="rounded-circle border border-2 border-white shadow-sm" width="50" height="50" style="object-fit: cover;" onerror="this.src='https://ui-avatars.com/api/?name=<?= urlencode($nama_user); ?>'">
-            <div class="ms-2">
-                <p class="text-muted small mb-0">Halo, Selamat Datang</p>
-                <h6 class="fw-bold mb-0"><?= $nama_user; ?></h6>
-            </div>
+            <a href="profil.php">
+                <img src="../assets/uploads/<?= $foto_user; ?>" 
+                class="rounded-circle border border-2 border-white shadow-sm" width="50" height="50" style="object-fit: cover;" 
+                onerror="this.src='https://ui-avatars.com/api/?name=<?= urlencode($nama_user); ?>'">
+            </a>
+                <div class="ms-2">
+                    <p class="text-muted small mb-0">Halo, Selamat Datang</p>
+                    <h6 class="fw-bold mb-0"><?= $nama_user; ?></h6>
+                </div>
         </div>
         <a href="../auth/logout.php" class="btn-logout-mobile shadow-sm" onclick="return confirm('Yakin ingin keluar?')">
             <i class="fas fa-sign-out-alt"></i>
@@ -154,18 +158,20 @@ for ($i = 5; $i >= 0; $i--) {
                 <h4 class="fw-bold m-0 text-dark"><?= number_format($total_berat, 1, ',', '.'); ?> <small class="fs-6 text-muted">Kg</small></h4>
             </div>
         </div>
-        <div class="col-12 col-lg-4 d-none d-lg-block">
+
+        <div class="col-12 col-lg-4 mb-3"> 
             <div class="card stat-card p-3 shadow-sm">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <p class="text-muted small fw-bold mb-1">PENARIKAN BULAN INI</p>
+                        <p class="text-muted small fw-bold mb-1 text-uppercase">Penarikan Bulan Ini</p>
                         <h4 class="fw-bold m-0 text-dark"><?= $transaksi_bulan_ini; ?> <small class="fs-6 text-muted">Kali</small></h4>
                     </div>
-                    <div class="icon-circle bg-info bg-opacity-10 text-info"><i class="fas fa-money-bill-wave"></i></div>
+                    <div class="icon-circle bg-info bg-opacity-10 text-info">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
     <div class="card stat-card p-4 mb-5 shadow-sm">
         <h6 class="fw-bold mb-4 text-muted"><i class="fas fa-chart-line me-2 text-success"></i>PROGRES SETORAN (Kg)</h6>

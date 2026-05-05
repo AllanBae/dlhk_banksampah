@@ -212,7 +212,7 @@ $query_riwayat = mysqli_query($conn, "SELECT t.*, h.jenis_sampah
         <i class="fas fa-history"></i><span>Riwayat</span>
     </a>
     <a href="saldo.php" class="nav-item-mobile">
-        <i class="fas fa-wallet"></i><span>Tarik</span>
+        <i class="fas fa-wallet"></i><span>Penarikan</span>
     </a>
     <a href="profil.php" class="nav-item-mobile">
         <i class="fas fa-user"></i><span>Profil</span>
