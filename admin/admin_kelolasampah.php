@@ -79,6 +79,12 @@ if (isset($_GET['hapus'])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
+        .img-preview {
+        width: 70px;
+        height: 70px;
+        object-fit: cover;
+        border-radius: 8px;
+            }
          :root { --hijau-tua: #1A8F3A; --hijau-muda: #9ACD32; --hijau-bg: #f4f9f5; }
         body { background-color: var(--hijau-bg); font-family: 'Segoe UI', sans-serif; }
         #sidebar { min-width: 260px; max-width: 260px; min-height: 100vh; background: var(--hijau-tua); color: #fff; transition: all 0.3s; z-index: 1040; }
