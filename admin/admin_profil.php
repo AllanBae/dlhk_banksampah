@@ -14,7 +14,7 @@ if (!isset($_SESSION['role']) || strtolower($_SESSION['role']) !== 'admin') {
 $session_user = isset($_SESSION['username']) ? $_SESSION['username'] : null;
 $session_id   = isset($_SESSION['idAdmin']) ? $_SESSION['idAdmin'] : null;
 
-// 3. Query pencarian data admin (Sesuai kolom: usernameAdmin / idAdmin)
+// 3. Query pencarian data admin
 if ($session_user) {
     $query_admin = mysqli_query($conn, "SELECT * FROM admins WHERE usernameAdmin = '$session_user'");
 } elseif ($session_id) {
@@ -42,7 +42,6 @@ if (isset($_POST['update_profil'])) {
     $sql = "UPDATE admins SET namaAdmin = '$nama_baru', usernameAdmin = '$user_baru'";
     
     if (!empty($pass_baru)) {
-        // Menggunakan MD5 sesuai dengan logika login.php Anda sebelumnya
         $hash_pass = md5($pass_baru);
         $sql .= ", passwordAdmin = '$hash_pass'";
     }
@@ -55,7 +54,7 @@ if (isset($_POST['update_profil'])) {
         header("Location: admin_profil.php?status=sukses");
         exit();
     } else {
-        $status_msg = "<div class='alert alert-danger'>Gagal memperbarui data: " . mysqli_error($conn) . "</div>";
+        $status_msg = "<div class='alert alert-danger shadow-sm border-0 rounded-3'>Gagal memperbarui data: " . mysqli_error($conn) . "</div>";
     }
 }
 ?>
@@ -72,7 +71,7 @@ if (isset($_POST['update_profil'])) {
         :root { --hijau-tua: #1A8F3A; --hijau-muda: #9ACD32; --hijau-bg: #f4f9f5; }
         body { background-color: var(--hijau-bg); font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
         
-        /* Sidebar Styling - Menyesuaikan Menu Lain */
+        /* Sidebar Styling */
         #sidebar { min-width: 260px; max-width: 260px; min-height: 100vh; background: var(--hijau-tua); color: #fff; transition: all 0.3s; z-index: 1040; }
         #sidebar .sidebar-header { padding: 25px 20px; background: rgba(0,0,0,0.1); text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
         #sidebar ul li a { padding: 15px 25px; display: block; color: rgba(255,255,255,0.8); text-decoration: none; transition: 0.3s; font-weight: 500; }
@@ -83,18 +82,18 @@ if (isset($_POST['update_profil'])) {
         #content { width: 100%; transition: all 0.3s; }
         .top-navbar { background: rgba(255, 255, 255, 0.9) !important; backdrop-filter: blur(10px); border-bottom: 1px solid #e9ecef; padding: 15px 25px; }
         
-        /* Card & UI Elements */
+        /* Card UI */
         .profile-card { border: none; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05); background: #fff; }
         .profile-cover { background: linear-gradient(135deg, var(--hijau-tua), var(--hijau-muda)); height: 100px; }
         .avatar-wrapper { margin-top: -50px; position: relative; display: inline-block; }
-        .avatar-circle { width: 100px; height: 100px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 40px; color: var(--hijau-tua); border: 5px solid #fff; shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .avatar-circle { width: 100px; height: 100px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 40px; color: var(--hijau-tua); border: 5px solid #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         
         .form-label { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: #6c757d; margin-bottom: 8px; }
         .form-control { border-radius: 10px; padding: 12px 15px; border: 1px solid #e0e0e0; background-color: #f8f9fa; }
         .form-control:focus { background-color: #fff; border-color: var(--hijau-muda); box-shadow: 0 0 0 0.25rem rgba(154, 205, 50, 0.1); }
         
-        .btn-update { background: var(--hijau-tua); border: none; border-radius: 10px; padding: 12px; font-weight: 600; transition: 0.3s; }
-        .btn-update:hover { background: #146e2d; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(26, 143, 58, 0.3); }
+        .btn-update { background: var(--hijau-tua); border: none; border-radius: 10px; padding: 12px; font-weight: 600; transition: 0.3s; color: white; }
+        .btn-update:hover { background: #146e2d; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(26, 143, 58, 0.3); color: white; }
 
         @media (max-width: 768px) { #sidebar { margin-left: -260px; position: fixed; } #sidebar.active { margin-left: 0; } }
     </style>
@@ -124,7 +123,7 @@ if (isset($_POST['update_profil'])) {
         <nav class="navbar top-navbar sticky-top d-flex justify-content-between align-items-center shadow-sm">
             <div class="d-flex align-items-center">
                 <button type="button" id="sidebarCollapse" class="btn btn-light d-md-none me-3"><i class="fas fa-bars"></i></button>
-                <h4 class="fw-bold m-0 text-success">Profil</h4>
+                <h4 class="fw-bold m-0 text-success">Pengaturan Profil</h4>
             </div>
             <div class="d-none d-md-block text-muted small">
                 <i class="fas fa-calendar-alt me-1"></i> <?= date('d M Y'); ?>
@@ -137,8 +136,8 @@ if (isset($_POST['update_profil'])) {
                     
                     <?= $status_msg; ?>
                     <?php if(isset($_GET['status']) && $_GET['status'] == 'sukses'): ?>
-                        <div class="alert alert-success border-0 shadow-sm rounded-3">
-                            <i class="fas fa-check-circle me-2"></i> Profil Anda berhasil diperbarui!
+                        <div id="success-alert" class="alert alert-success border-0 shadow-sm rounded-3">
+                            <i class="fas fa-check-circle me-2"></i> Profil berhasil diperbarui...
                         </div>
                     <?php endif; ?>
 
@@ -151,8 +150,8 @@ if (isset($_POST['update_profil'])) {
                                 </div>
                             </div>
                             
-                            <h4 class="fw-bold mt-2 mb-0"><?= $data['namaAdmin']; ?></h4>
-                            <p class="text-muted small mb-4">@<?= $data['usernameAdmin']; ?></p>
+                            <h4 class="fw-bold mt-2 mb-0"><?= htmlspecialchars($data['namaAdmin']); ?></h4>
+                            <p class="text-muted small mb-4">@<?= htmlspecialchars($data['usernameAdmin']); ?></p>
                             
                             <hr class="my-4 opacity-50">
 
@@ -166,7 +165,7 @@ if (isset($_POST['update_profil'])) {
                                     <label class="form-label fw-bold">Nama Lengkap</label>
                                     <div class="input-group">
                                         <span class="input-group-text bg-white border-end-0"><i class="fas fa-user text-success"></i></span>
-                                        <input type="text" name="namaAdmin" class="form-control border-start-0" value="<?= $data['namaAdmin']; ?>" required>
+                                        <input type="text" name="namaAdmin" class="form-control border-start-0" value="<?= htmlspecialchars($data['namaAdmin']); ?>" required>
                                     </div>
                                 </div>
 
@@ -174,7 +173,7 @@ if (isset($_POST['update_profil'])) {
                                     <label class="form-label fw-bold">Username</label>
                                     <div class="input-group">
                                         <span class="input-group-text bg-white border-end-0"><i class="fas fa-at text-success"></i></span>
-                                        <input type="text" name="usernameAdmin" class="form-control border-start-0" value="<?= $data['usernameAdmin']; ?>" required>
+                                        <input type="text" name="usernameAdmin" class="form-control border-start-0" value="<?= htmlspecialchars($data['usernameAdmin']); ?>" required>
                                     </div>
                                 </div>
 
@@ -186,8 +185,8 @@ if (isset($_POST['update_profil'])) {
                                     </div>
                                 </div>
 
-                                <button type="submit" name="update_profil" class="btn btn-success btn-update w-100 text-white">
-                                    <i class="fas fa-save me-2"></i> Simpan Perubahan Profil
+                                <button type="submit" name="update_profil" class="btn btn-update w-100">
+                                    <i class="fas fa-save me-2"></i> Simpan Perubahan
                                 </button>
                             </form>
                         </div>
@@ -207,6 +206,22 @@ if (isset($_POST['update_profil'])) {
         sidebarCollapse.addEventListener('click', function() {
             sidebar.classList.toggle('active');
         });
+    }
+
+    // --- LOGIKA OTOMATIS HILANG & REDIRECT ---
+    const successAlert = document.getElementById('success-alert');
+    if (successAlert) {
+        // Tunggu 2 detik
+        setTimeout(function() {
+            // Efek menghilang halus
+            successAlert.style.transition = "opacity 0.5s ease";
+            successAlert.style.opacity = "0";
+            
+            // Redirect ke dashboard setelah 0.5 detik (durasi transisi)
+            setTimeout(function() {
+                window.location.href = 'admin_dashboard.php';
+            }, 500);
+        }, 2000); 
     }
 </script>
 </body>

@@ -234,10 +234,6 @@ $query_setoran = mysqli_query($conn, "
                     </table>
                 </div>
             </div>
-
-            <div class="mt-4 text-center text-muted">
-                <small>&copy; <?= date('Y'); ?> Bank Sampah EL HA KA</small>
-            </div>
         </div>
     </div>
 </div>
