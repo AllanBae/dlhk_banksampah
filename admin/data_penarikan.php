@@ -98,7 +98,7 @@ $total_selesai = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as tota
         @media (max-width: 768px) { #sidebar { margin-left: -260px; position: fixed; } #sidebar.active { margin-left: 0; } }
     </style>
 </head>
-<body>aaa
+<body>
 
 <div class="sidebar-overlay" id="overlay"></div>
 
