@@ -11,9 +11,20 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] != 'admin') {
 
 $nama_admin = isset($_SESSION['nama']) ? $_SESSION['nama'] : "Admin";
 
-// Ambil data statistik
+// --- PENGAMBILAN DATA STATISTIK ---
+
+// 1. Total Nasabah
 $total_nasabah = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM data_nasabah WHERE role = 'nasabah'"))['total'];
+
+// 2. Total Saldo Nasabah
 $total_saldo = mysqli_fetch_assoc(mysqli_query($conn, "SELECT SUM(saldo) as total FROM data_nasabah WHERE role = 'nasabah'"))['total'];
+
+// 3. Total Uang Kas (Hasil Penjualan ke Pengepul) - FITUR BARU
+$query_kas = mysqli_query($conn, "SELECT SUM(total_harga) as total_kas FROM data_penjualan");
+$data_kas = mysqli_fetch_assoc($query_kas);
+$total_uang_kas = $data_kas['total_kas'] ?? 0;
+
+// --- DATA TREN & TOP LIST (TETAP ADA) ---
 
 // Data tren bulanan
 $data_berat_bulan = array_fill(0, 12, 0); 
@@ -42,7 +53,6 @@ $q_top_nasabah = mysqli_query($conn, "SELECT dn.nama_lengkap, dn.username, COUNT
         :root { --hijau-tua: #1A8F3A; --hijau-muda: #9ACD32; --hijau-bg: #f4f9f5; }
         body { background-color: var(--hijau-bg); font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
         
-        /* Sidebar Styling */
         #sidebar { min-width: 260px; max-width: 260px; min-height: 100vh; background: var(--hijau-tua); color: #fff; transition: all 0.3s; z-index: 1050; }
         #sidebar .sidebar-header { padding: 25px 20px; background: rgba(0,0,0,0.1); text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
         #sidebar ul li a { padding: 15px 25px; display: block; color: rgba(255,255,255,0.8); text-decoration: none; transition: 0.3s; font-weight: 500; }
@@ -54,7 +64,6 @@ $q_top_nasabah = mysqli_query($conn, "SELECT dn.nama_lengkap, dn.username, COUNT
         .main-inner { padding: 30px; }
         .glass-card { background: #fff; border: none; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
         
-        /* Mobile Navbar Updates */
         .sidebar-overlay { display: none; position: fixed; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 1045; top: 0; left: 0; }
         
         @media (max-width: 768px) {
@@ -79,33 +88,16 @@ $q_top_nasabah = mysqli_query($conn, "SELECT dn.nama_lengkap, dn.username, COUNT
             <h4 class="fw-bold m-0">EL HA KA</h4>
         </div>
         <ul class="list-unstyled components">
-            <li class="<?= basename($_SERVER['PHP_SELF']) == 'admin_dashboard.php' ? 'active' : ''; ?>">
-                <a href="admin_dashboard.php"><i class="fas fa-chart-line me-3"></i> Dashboard</a>
-            </li>
-            <li class="<?= basename($_SERVER['PHP_SELF']) == 'data_nasabah.php' ? 'active' : ''; ?>">
-                <a href="data_nasabah.php"><i class="fas fa-users me-3"></i> Data Nasabah</a>
-            </li>
-            <li class="<?= basename($_SERVER['PHP_SELF']) == 'data_setoran.php' ? 'active' : ''; ?>">
-                <a href="data_setoran.php"><i class="fas fa-balance-scale me-3"></i> Data Setoran</a>
-            </li>
-            <li class="<?= basename($_SERVER['PHP_SELF']) == 'data_penarikan.php' ? 'active' : ''; ?>">
-                <a href="data_penarikan.php"><i class="fas fa-hand-holding-usd me-3"></i> Data Penarikan</a>
-            </li>
-            <li class="<?= basename($_SERVER['PHP_SELF']) == 'admin_kelolasampah.php' ? 'active' : ''; ?>">
-                <a href="admin_kelolasampah.php"><i class="fas fa-recycle me-3"></i> Kelola Sampah</a>
-            </li>
-            <li class="<?= basename($_SERVER['PHP_SELF']) == 'admin_kelolaberita.php' ? 'active' : ''; ?>">
-                <a href="admin_kelolaberita.php"><i class="fas fa-newspaper me-3"></i> Kelola Berita</a>
-            </li>
-            <li class="<?= basename($_SERVER['PHP_SELF']) == 'laporan.php' ? 'active' : ''; ?>">
-                <a href="laporan.php"><i class="fas fa-file-invoice me-3"></i> Laporan</a>
-            </li>
-            <li class="<?= basename($_SERVER['PHP_SELF']) == 'admin_profil.php' ? 'active' : ''; ?>">
-                <a href="admin_profil.php"><i class="fas fa-user me-3"></i> Profil</a>
-            </li>
-            <li>
-                <a href="../auth/logout.php" class="text-warning"><i class="fas fa-sign-out-alt me-3"></i> Keluar</a>
-            </li>
+            <li class="active"><a href="admin_dashboard.php"><i class="fas fa-chart-line me-3"></i> Dashboard</a></li>
+            <li><a href="data_nasabah.php"><i class="fas fa-users me-3"></i> Data Nasabah</a></li>
+            <li><a href="data_setoran.php"><i class="fas fa-balance-scale me-3"></i> Data Setoran</a></li>
+            <li><a href="data_penarikan.php"><i class="fas fa-hand-holding-usd me-3"></i> Data Penarikan</a></li>
+            <li><a href="admin_kelolasampah.php"><i class="fas fa-recycle me-3"></i> Kelola Sampah</a></li>
+            <li><a href="admin_kelolaberita.php"><i class="fas fa-newspaper me-3"></i> Kelola Berita</a></li>
+            <li><a href="laporan.php"><i class="fas fa-file-invoice me-3"></i> Laporan</a></li>
+            <li><a href="admin_profil.php"><i class="fas fa-user me-3"></i> Profil</a></li>
+            <li><a href="data_penjualan.php"><i class="fas fa-shopping-cart me-3"></i> Data Penjualan</a></li>
+            <li><a href="../auth/logout.php" class="text-warning"><i class="fas fa-sign-out-alt me-3"></i> Keluar</a></li>
         </ul>
     </nav>
 
@@ -115,27 +107,22 @@ $q_top_nasabah = mysqli_query($conn, "SELECT dn.nama_lengkap, dn.username, COUNT
                 <button type="button" id="sidebarCollapse" class="btn btn-light d-md-none me-3"><i class="fas fa-bars"></i></button>
                 <h4 class="fw-bold m-0 text-success">Dashboard Statistik</h4>
             </div>
-
             <div class="d-flex align-items-center">
                 <span class="text-muted fw-medium me-4 d-none d-md-inline">
                     <i class="fas fa-calendar-alt me-1"></i> <?= date('d F Y'); ?>
                 </span>
-                
-               <a href="admin_profil.php" class="text-decoration-none">
-                    <div class="bg-light px-3 py-2 rounded-pill shadow-sm border hover-profile" style="border-color: rgba(26, 143, 58, 0.2) !important; cursor: pointer;">
+                <a href="admin_profil.php" class="text-decoration-none">
+                    <div class="bg-light px-3 py-2 rounded-pill shadow-sm border" style="border-color: rgba(26, 143, 58, 0.2) !important;">
                         <span class="text-muted small me-1 d-none d-sm-inline">Login Sebagai:</span>
-                        <span class="fw-bold" style="color: var(--hijau-tua);">
-                            <i class="fas fa-user-circle me-1"></i> <?= htmlspecialchars($nama_admin); ?>
-                        </span>
+                        <span class="fw-bold" style="color: var(--hijau-tua);"><i class="fas fa-user-circle me-1"></i> <?= htmlspecialchars($nama_admin); ?></span>
                     </div>
                 </a>
-                
             </div>
         </nav>
 
         <div class="main-inner">
             <div class="row g-4 mb-4">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="glass-card p-4 h-100">
                         <div class="d-flex align-items-center">
                             <div class="icon-box me-3" style="background: rgba(154, 205, 50, 0.2); color: var(--hijau-tua);">
@@ -148,15 +135,28 @@ $q_top_nasabah = mysqli_query($conn, "SELECT dn.nama_lengkap, dn.username, COUNT
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="glass-card p-4 h-100">
                         <div class="d-flex align-items-center">
                             <div class="icon-box me-3" style="background: rgba(26, 143, 58, 0.1); color: var(--hijau-tua);">
                                 <i class="fas fa-wallet"></i>
                             </div>
                             <div>
-                                <h6 class="m-0 text-muted fw-bold mb-1">Total Semua Saldo Nasabah Yang Aktif</h6>
+                                <h6 class="m-0 text-muted fw-bold mb-1">Total Saldo Nasabah yg Aktif</h6>
                                 <h3 class="fw-bold m-0" style="color: var(--hijau-tua);">Rp <?= number_format($total_saldo, 0, ',', '.'); ?></h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="glass-card p-4 h-100 border-start border-4 border-primary">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-box me-3" style="background: rgba(13, 110, 253, 0.1); color: #0d6efd;">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                            <div>
+                                <h6 class="m-0 text-muted fw-bold mb-1">Total Uang Kas EL HA KA </h6>
+                                <h3 class="fw-bold m-0" style="color: #0d6efd;">Rp <?= number_format($total_uang_kas, 0, ',', '.'); ?></h3>
                             </div>
                         </div>
                     </div>
@@ -230,7 +230,6 @@ $q_top_nasabah = mysqli_query($conn, "SELECT dn.nama_lengkap, dn.username, COUNT
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // Logic Sidebar Mobile
     const sidebar = document.getElementById('sidebar');
     const sidebarCollapse = document.getElementById('sidebarCollapse');
     const overlay = document.getElementById('overlay');
@@ -247,7 +246,6 @@ $q_top_nasabah = mysqli_query($conn, "SELECT dn.nama_lengkap, dn.username, COUNT
         overlay.classList.remove('active');
     });
 
-    // Chart.js
     const ctx = document.getElementById('trendChart').getContext('2d');
     const dataBerat = <?= $json_data_bulan; ?>;
     new Chart(ctx, {
