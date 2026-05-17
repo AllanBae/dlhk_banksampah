@@ -140,6 +140,7 @@ $q_top_nasabah = mysqli_query($conn, "SELECT dn.nama_lengkap, dn.username, COUNT
             <li><a href="admin_kelolasampah.php"><i class="fas fa-recycle me-3"></i> Kelola Sampah</a></li>
             <li><a href="admin_kelolaberita.php"><i class="fas fa-newspaper me-3"></i> Kelola Berita</a></li>
             <li><a href="laporan.php"><i class="fas fa-file-invoice me-3"></i> Laporan Setoran</a></li>
+            <li><a href="laporan_keuangan.php"><i class="fas fa-file-invoice me-3"></i> Laporan Keuangan</a></li>
             <li><a href="admin_profil.php"><i class="fas fa-user me-3"></i> Profil</a></li>
             <li><a href="data_penjualan.php"><i class="fas fa-shopping-cart me-3"></i> Data Penjualan</a></li>
             <li><a href="../auth/logout.php" class="text-warning"><i class="fas fa-sign-out-alt me-3"></i> Keluar</a></li>
