@@ -153,8 +153,8 @@ $query_setoran = mysqli_query($conn, "
 <div class="d-flex"> 
     <nav id="sidebar">
         <div class="sidebar-header d-flex align-items-center justify-content-center">
-            <i class="fas fa-recycle fs-3 me-2" style="color: #9ACD32;"></i>
-            <h4 class="fw-bold m-0">EL HA KA</h4>
+            <img src="../assets/img/LOGO BANK SAMPAH EL HA KA.png" height="40" class="me-2">
+            <h4 class="fw-bold m-0">El Ha Ka</h4>
         </div>
         <ul class="list-unstyled components">
             <li><a href="admin_dashboard.php"><i class="fas fa-chart-line me-3"></i> Dashboard</a></li>
@@ -187,7 +187,7 @@ $query_setoran = mysqli_query($conn, "
                         </h5>
                     </div>
                     <button class="btn text-white fw-medium shadow-sm" style="background-color: var(--hijau-tua);" data-bs-toggle="modal" data-bs-target="#modalTambah">
-                        <i class="fas fa-plus-circle me-1"></i> Tambah Setoran
+                        <i class="fas fa-plus-circle me-1"></i> Tambah Setorand
                     </button>
                 </div>
 

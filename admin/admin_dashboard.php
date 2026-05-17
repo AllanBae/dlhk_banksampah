@@ -109,7 +109,7 @@ $q_top_nasabah = mysqli_query($conn, "SELECT dn.nama_lengkap, dn.username, COUNT
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root { --hijau-tua: #1A8F3A; --hijau-muda: #9ACD32; --hijau-bg: #f4f9f5; }
+        :root { --hijau-tua: #1e7936; --hijau-muda: #9ACD32; --hijau-bg: #f4f9f5; }
         body { background-color: var(--hijau-bg); font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
         #sidebar { min-width: 260px; max-width: 260px; min-height: 100vh; background: var(--hijau-tua); color: #fff; transition: all 0.3s; z-index: 1050; }
         #sidebar .sidebar-header { padding: 25px 20px; background: rgba(0,0,0,0.1); text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
@@ -129,8 +129,8 @@ $q_top_nasabah = mysqli_query($conn, "SELECT dn.nama_lengkap, dn.username, COUNT
 <div class="d-flex"> 
     <nav id="sidebar">
         <div class="sidebar-header d-flex align-items-center justify-content-center">
-            <i class="fas fa-recycle fs-3 me-2" style="color: #9ACD32;"></i>
-            <h4 class="fw-bold m-0">EL HA KA</h4>
+            <img src="../assets/img/LOGO BANK SAMPAH EL HA KA.png" height="40" class="me-2">
+            <h4 class="fw-bold m-0">El Ha Ka</h4>
         </div>
         <ul class="list-unstyled components">
             <li class="active"><a href="admin_dashboard.php"><i class="fas fa-chart-line me-3"></i> Dashboard</a></li>

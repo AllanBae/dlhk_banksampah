@@ -102,8 +102,8 @@ if (isset($_GET['hapus'])) {
 <div class="d-flex"> 
     <nav id="sidebar">
         <div class="sidebar-header d-flex align-items-center justify-content-center">
-            <i class="fas fa-recycle fs-3 me-2" style="color: #9ACD32;"></i>
-            <h4 class="fw-bold m-0">EL HA KA</h4>
+            <img src="../assets/img/LOGO BANK SAMPAH EL HA KA.png" height="40" class="me-2">
+            <h4 class="fw-bold m-0">El Ha Ka</h4>
         </div>
         <ul class="list-unstyled components">
             <li><a href="admin_dashboard.php"><i class="fas fa-chart-line me-3"></i> Dashboard</a></li>
